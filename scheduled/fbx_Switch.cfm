@@ -61,7 +61,7 @@ SWIM BALANCES
 
 		<cfset request.replyToAddress = "treasurer@squidswimteam.org,scott@spidermonkeytech.com" />
 		<cfset request.scheduledCFC = createObject("component",request.scheduled_cfc) />
-		<cfset request.scheduledCFC.processBalanceNotifications(request.dsn,request.pricePerSwim,request.unsubscribeURL,request.encryptionKey,request.encryptionAlgorithm,request.encryptionEncoding,request.from_email,request.replyToAddress) />
+		<cfset request.scheduledCFC.processBalanceNotifications(request.dsn,request.unsubscribeURL,request.encryptionKey,request.encryptionAlgorithm,request.encryptionEncoding,request.from_email,request.replyToAddress) />
 		<cfset request.template = "act_balanceNotifications.cfm" />
 
 	</cfsilent>

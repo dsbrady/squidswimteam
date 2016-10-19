@@ -117,8 +117,8 @@
 						#arguments.qExpiredPasses.first_name#,
 					</p>
 					<p>
-						Your #arguments.qExpiredPasses.swimPass# SQUID swim pass has expired as of #dateFormat(arguments.qExpiredPasses.expirationDate,"mmm. d, yyyy")#. 
-						Unless you buy a new pass, you will be charged the #dollarFormat(arguments.dropInFee)# drop-in fee for every practice you attend.  
+						Your #arguments.qExpiredPasses.swimPass# SQUID swim pass has expired as of #dateFormat(arguments.qExpiredPasses.expirationDate,"mmm. d, yyyy")#.
+						Unless you buy a new pass, you will be charged the #dollarFormat(arguments.dropInFee)# drop-in fee for every practice you attend.
 						We strongly encourage you to buy a new pass now to avoid those charges.
 					</p>
 					<p>
@@ -150,7 +150,7 @@
 				</cfcatch>
 			</cftry>
 		</cfloop>
-		
+
 		<cfreturn local.qFailedNotifications />
 	</cffunction>
 
@@ -173,9 +173,9 @@
 						#arguments.qExpiringPasses.first_name#,
 					</p>
 					<p>
-						Your #arguments.qExpiringPasses.swimPass# SQUID swim pass will expire in #arguments.qExpiringPasses.daysUntilExpiration# 
-						day<cfif arguments.qExpiringPasses.daysUntilExpiration NEQ 1>s</cfif> (on #dateFormat(arguments.qExpiringPasses.expirationDate,"mmm. d, yyyy")#). 
-						Unless you buy a new pass, you will be charged the #dollarFormat(arguments.dropInFee)# drop-in fee for every practice you attend after your pass expires.  
+						Your #arguments.qExpiringPasses.swimPass# SQUID swim pass will expire in #arguments.qExpiringPasses.daysUntilExpiration#
+						day<cfif arguments.qExpiringPasses.daysUntilExpiration NEQ 1>s</cfif> (on #dateFormat(arguments.qExpiringPasses.expirationDate,"mmm. d, yyyy")#).
+						Unless you buy a new pass, you will be charged the #dollarFormat(arguments.dropInFee)# drop-in fee for every practice you attend after your pass expires.
 						We strongly encourage you to buy a new pass now to avoid those charges.
 					</p>
 					<p>
@@ -189,7 +189,7 @@
 				<!--- Update successful record --->
 				<cfquery name="local.qUpdate" datasource="#arguments.dsn#">
 					UPDATE usersSwimPasses
-					SET 
+					SET
 					<cfif isDate(arguments.qExpiringPasses.expirationWarningDate1)>
 						expirationWarningDate2 = getDate(),
 					<cfelse>
@@ -212,7 +212,7 @@
 				</cfcatch>
 			</cftry>
 		</cfloop>
-		
+
 		<cfreturn local.qFailedNotifications />
 	</cffunction>
 
@@ -259,13 +259,12 @@
 				</cfloop>
 			</cfif>
 		</cfmail>
-		
+
 		<cfreturn />
 	</cffunction>
 
 	<cffunction name="processBalanceNotifications" access="public" output="false" returntype="void">
 		<cfargument name="dsn" required="true" type="string" />
-		<cfargument name="pricePerSwim" required="true" type="numeric" />
 		<cfargument name="unsubscribeURL" required="true" type="string" />
 		<cfargument name="encryptionKey" required="true" type="string" />
 		<cfargument name="encryptionAlgorithm" required="true" type="string" />
@@ -276,7 +275,7 @@
 		<cfset var local = structNew() />
 
 		<cfset local.objMembers = createObject("component","squidswimteam.cfc.members") />
-		<cfset local.qNotifications = getUserBalanceNotifications(arguments.dsn,arguments.pricePerSwim) />
+		<cfset local.qNotifications = getUserBalanceNotifications(arguments.dsn) />
 		<cfset local.qLastNotification = "" />
 		<cfset local.unsubscribeContent = "" />
 		<cfset local.sendEmail = false />
@@ -298,7 +297,7 @@
 			<cfelse>
 				<cfset local.sendEmail = true />
 			</cfif>
-			
+
 			<!--- If ok to send e-mail, send it out, insert record into userBalanceNotifications, and set resetBalanceNotifications = 0 --->
 			<cfif local.sendEmail>
 				<!--- Get unsubscribe content --->
@@ -339,8 +338,7 @@
 
 	<cffunction name="getUserBalanceNotifications" access="private" output="false" returntype="query">
 		<cfargument name="dsn" required="true" type="string" />
-		<cfargument name="pricePerSwim" required="true" type="numeric" />
-		
+
 		<cfset var local = structNew() />
 		<cfset local.qNotifications = "" />
 
@@ -395,7 +393,7 @@
 	<cffunction name="getLastBalanceNotificationByUserID" access="private" output="false" returntype="query">
 		<cfargument name="dsn" required="true" type="string" />
 		<cfargument name="userID" required="true" type="numeric" />
-		
+
 		<cfset var local = structNew() />
 		<cfset local.qNotification = "" />
 

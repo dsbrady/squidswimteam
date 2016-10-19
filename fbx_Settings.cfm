@@ -70,7 +70,8 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	Request.ssOther = ArrayNew(1);
 	Request.jsOther = ArrayNew(1);
 
-	request.pricePerSwim = 7;
+	request.pricePerSwimMembers = 7;
+	request.pricePerSwimNonMembers = 7.50;
 	request.purchasedSwimsPerFreeSwim = 10;
 
 	if (listLast(cgi.server_name,".") IS NOT "org" OR listFirst(cgi.script_name,"/") IS "dev")

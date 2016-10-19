@@ -88,7 +88,7 @@
 				<strong>Swim Balance Adjustment:</strong>
 			</td>
 			<td>
-				#val(request.qMember.balance)# ($#trim(numberFormat(val(request.qMember.balance) * request.pricePerSwim * -1,"999.99"))#)
+				#val(request.qMember.balance)# ($#trim(numberFormat(val(request.qMember.balance) * request.pricePerSwimMembers * -1,"999.99"))#)
 			</td>
 			<td>
 				&nbsp;
