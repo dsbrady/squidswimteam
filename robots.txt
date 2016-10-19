@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /new/
+Disallow: /qa/
+Disallow: /dev/
+Disallow: /doggie/
+Disallow: /scheduled/
