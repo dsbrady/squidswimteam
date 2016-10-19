@@ -1,0 +1,2 @@
+<cfoutput>#jsonObject#</cfoutput>
+<cfabort>

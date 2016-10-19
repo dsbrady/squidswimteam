@@ -1,0 +1,278 @@
+.btnImage {cursor: pointer; cursor: hand;}
+
+body {
+	height:100%;
+	width:100%;
+	background-color: rgb(225,236,238);
+	margin: 0px;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+}
+
+html {
+	height:100%;
+	width:100%;
+}
+
+img {
+	border: 0px;
+}
+
+.newsHead {
+	font-weight: bold;
+}
+
+.newsDate {
+	font-style: italics;
+}
+
+.newsBody {
+	text-align: left;
+}
+
+.plain_text {
+	color: rgb(0,0,0);
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+}
+
+.footer {
+	color: rgb(0,0,0);
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.9em;
+	font-style: italic;
+	text-align: center;
+}
+
+.tableClass {
+	border: 1px solid rgb(0,150,147);
+}
+
+.tableHead {
+	background-color: rgb(0,150,147);
+	color: white;
+	font-weight: bold;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+}
+
+.tableRow1 {
+	background-color: #ffffff;
+	border: 1px solid rgb(0,150,147);
+}
+
+.tableRow0 {
+	background-color: #eeeeee;
+	border: 1px solid rgb(0,150,147);
+}
+
+.tableCell {
+	border: 1px solid rgb(0,150,147);
+	height: 25px;
+	text-align: left;
+}
+
+.tableCellNoBorder {
+	border: 0px;
+	height: 25px;
+	text-align: left;
+}
+
+h2 {
+	font-size: 1.2em;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-weight: bold;
+}
+
+.plain_text_small {
+	color: rgb(0,0,0);
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.75em;
+}
+
+.errorText {
+	color: #ff0000;
+	font-weight: bold;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	text-align: left;
+}
+
+.buttonStyle {
+	color: black;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+	font-weight: bold;
+	cursor: hand;
+}
+
+.calendarHead {
+	font-family: Verdana, Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+	background-color: rgb(0,150,147);
+	color: white;
+	font-weight: bold;
+	border: 1px solid rgb(197,218,223);
+}
+
+.calendarPlain {
+	font-family: Verdana, Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+	background-color: rgb(197,218,223);
+	color: rgb(0,0,0);
+	height: 55px;
+	vertical-align: top;
+	border: 1px solid rgb(0,150,147);
+}
+
+.calendarCurrent {
+	font-family: Verdana, Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+	background-color: rgb(104,173,192);
+	color: rgb(255,255,255);
+	height: 55px;
+	vertical-align: top;
+	border: 1px solid rgb(0,150,147);
+}
+
+.calendarDetails {
+	visibility: hidden;
+	overflow: visible;
+	font-family: Verdana, Arial, Helvetica, Sans, Sans-Serif;
+	font-size: 0.8em;
+	font-weight: bold;
+	background-color: rgb(104,173,192);
+	border: 3px solid rgb(255,255,255);
+	color: rgb(255,255,255);
+	width: 200px;
+	height: 50px;
+	vertical-align: middle;
+	text-align: center;
+	z-index:2;
+}
+
+#primaryUserDiv {
+	height: 200px;
+	width: 100%;
+	overflow: auto;
+	background-color: #ffffff;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#primaryUserDiv table {
+	width: 100%;
+	border: 1px solid #000000;
+	padding: 0px;
+	margin: 0px;
+}
+
+#primaryUserDiv table th {
+	border: 1px solid #000000;
+	padding: 3px;
+	margin: 0px;
+}
+
+#primaryUserDiv #primaryUserList {
+	background-color: #ffffff;
+}
+
+#primaryUserDiv #primaryUserList td {
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+	padding: 3px;
+	margin: 0px;
+	cursor: pointer;
+}
+
+#primaryUserDiv #primaryUserList tr {
+	background-color: #ffffff;
+	color: #000000;
+	cursor: pointer;
+}
+
+#primaryUserDiv #primaryUserList tr.selected {
+	background-color: #68ADC0;
+	color: #000000;
+}
+
+#primaryUserDiv #primaryUserList td.selected {
+	background-color: #68ADC0;
+	color: #000000;
+}
+
+
+#secondaryUserDiv {
+	height: 200px;
+	width: 100%;
+	overflow: auto;
+	background-color: #ffffff;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#secondaryUserDiv table {
+	width: 100%;
+	border: 1px solid #000000;
+	padding: 0px;
+	margin: 0px;
+}
+
+#secondaryUserDiv table th {
+	border: 1px solid #000000;
+	padding: 3px;
+	margin: 0px;
+}
+
+#secondaryUserDiv #secondaryUserList {
+	background-color: #ffffff;
+}
+
+#secondaryUserDiv #secondaryUserList td {
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+	padding: 3px;
+	margin: 0px;
+	cursor: pointer;
+}
+
+#secondaryUserDiv #secondaryUserList tr {
+	background-color: #ffffff;
+	color: #000000;
+	cursor: pointer;
+}
+
+#secondaryUserDiv #secondaryUserList tr.selected {
+	background-color: #68ADC0;
+	color: #000000;
+}
+
+#secondaryUserDiv #secondaryUserList tr.disabled {
+	background-color: #cccccc;
+	color: #000000;
+}
+
+span.clickable, a {
+	color: #0000FF;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#numberOfSwimsLabelContainer {
+	float: left;
+	margin-right: 20px;
+}
+
+#buySwimsConfirmationContainer {
+	width: 250px;
+}
+
+.buySwimsLabel {
+	width: 130px;
+	font-weight: bold;
+	float: left;
+}
+
+.buySwimsText {
+	text-align: right;
+	width: 200px;
+}

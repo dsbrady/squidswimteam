@@ -1,0 +1,59 @@
+body {
+	background-color: rgb(255,255,255);
+	font-family: Times New Roman, Times, Serif;
+	font-size: 12pt;
+}
+
+.plain_text {
+	color: rgb(0,0,0);
+	font-family: Times New Roman, Times, Serif;
+	font-size: 12pt;
+}
+
+h2 {
+	font-size: 14pt;
+	font-family: Times New Roman, Times, Serif;
+	font-weight: bold;
+}
+
+br {
+	height:30px;
+}
+
+.tableClass {
+	border: 1px solid rgb(0,0,0);
+}
+
+.tableHead {
+	background-color: rgb(128,128,128);
+	color: white;
+	font-weight: bold;
+	font-family: Arial, Helvetica, Sans, Sans-Serif;
+}
+
+.tableRow1 {
+	background-color: #ffffff;
+	border: 1px solid rgb(0,0,0);
+}
+
+.tableRow0 {
+	background-color: #eeeeee;
+	border: 1px solid rgb(0,0,0);
+}
+
+.tableCell {
+	border: 1px solid rgb(0,0,0);
+	height: 25px;
+	text-align: left;
+}
+
+.tableCellNoBorder {
+	border: 0px;
+	height: 25px;
+	text-align: left;
+}
+
+#pageBreak {
+	page-break-after: always
+}	
+
