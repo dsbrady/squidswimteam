@@ -67,7 +67,7 @@
 		</tr>
 		<tr valign="top">
 			<td colspan="2">
-				<cfmodule template="/lib/buySwims.cfm" numSwims="#attributes.numSwims#">
+				<cfmodule template="#request.siteRoot#lib/buySwims.cfm" numSwims="#attributes.numSwims#">
 			</td>
 		</tr>
 		<tr>

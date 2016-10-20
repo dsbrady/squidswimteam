@@ -90,7 +90,7 @@
 		</tr>
 		<tr>
 			<td colspan="3">
-				<cfmodule template="/lib/buySwimsConfirmation.cfm" numSwims="#attributes.numSwims#">
+				<cfmodule template="#request.siteRoot#lib/buySwims.cfm" numSwims="#attributes.numSwims#">
 			</td>
 		</tr>
 		<tr>

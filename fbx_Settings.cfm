@@ -26,9 +26,9 @@
 <!---
 Uncomment this if you wish to have code specific that only executes if the circuit running is the home circuit.
 --->
+
 <cfif fusebox.IsHomeCircuit>
 	<!--- put settings here that you want to execute only when this is the application's home circuit (for example "<cfapplication>" )--->
-	<cfapplication name="squid" applicationtimeout="#CreateTimeSpan(0,1,0,0)#" clientmanagement="No" sessionmanagement="Yes" sessiontimeout="#CreateTimeSpan(0,1,0,0)#" setclientcookies="Yes">
 
 	<cfscript>
 		XFA.home = "home.dsp_content";
@@ -74,11 +74,12 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	request.pricePerSwimNonMembers = 7.50;
 	request.purchasedSwimsPerFreeSwim = 10;
 
-	if (listLast(cgi.server_name,".") IS NOT "org" OR listFirst(cgi.script_name,"/") IS "dev")
+	if (application.environment == "development")
 	{
 	/* Development */
+		request.siteRoot = "/dev/";
 		Request.DSN = "squidSQL";
-		Request.theServer = "http://" & CGI.server_name & "/dev";
+		Request.theServer = "https://" & CGI.server_name & "/dev";
 		Request.js_default = Request.theServer & "/javascript/default.js";
 		Request.ss_main = Request.theServer & "/styles/main.css";
 		variables.baseHREF = Request.theServer & "/";
@@ -108,6 +109,7 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	else
 	{
 		/* Production */
+		request.siteRoot = "/";
 		Request.DSN = "squidSQL";
 		Request.theServer = "https://www.squidswimteam.org";
 		Request.js_default = Request.theServer & "/javascript/default.js";

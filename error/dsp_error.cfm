@@ -81,7 +81,7 @@
 		<tr>
 			<td align="center" colspan="2">
 				<h2>
-					SQUID - Errorasdfasdf
+					SQUID - Error
 				</h2>
 			</td>
 		</tr>
