@@ -27,7 +27,7 @@
 --->
 <cfsilent>
 	<cfset variables.tabindex = 1>
-	<cfset swimsCost = attributes.numSwims * Request.pricePerSwim />
+	<cfset swimsCost = attributes.numSwims * request.pricePerSwimMembers />
 	<cfset additionalSwims = attributes.numSwims \ request.purchasedSwimsPerFreeSwim />
 	<cfif swimsCost LT 0>
 		<cfset swimsCost = 0>
@@ -102,7 +102,7 @@
 				<strong>Swim Balance Adjustment:</strong>
 			</td>
 			<td align="right">
-				#request.qMember.balance# ($#trim(numberFormat(request.qMember.balance * request.pricePerSwim * -1,"999.99"))#)<sup>*</sup>
+				#request.qMember.balance# ($#trim(numberFormat(request.qMember.balance * request.pricePerSwimMembers * -1,"999.99"))#)<sup>*</sup>
 			</td>
 			<td>
 				&nbsp;

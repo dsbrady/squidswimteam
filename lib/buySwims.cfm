@@ -4,7 +4,7 @@
 <cfoutput>
 <p>
 	To purchase individual swims and pay via PayPal, select the number of of swims you'd like to purchase.
-	Each swim is #dollarFormat(request.pricePerSwim)#.  For every 10 swims you purchase, you will receive an additional
+	Each swim is #dollarFormat(request.pricePerSwimMembers)#.  For every 10 swims you purchase, you will receive an additional
 	swim at no charge.
 	(If you'd like to purchase swims by check, please mail us a check or bring one to practice)
 </p>

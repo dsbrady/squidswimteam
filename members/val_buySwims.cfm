@@ -30,11 +30,11 @@
 </fusedoc>
 --->
 <cfif val(attributes.swimPassID) GT 0>
-	<cfset swimsCost = val(request.qSwimPass.price) - (request.qMember.balance * request.pricePerSwim) />
+	<cfset swimsCost = val(request.qSwimPass.price) - (request.qMember.balance * request.pricePerSwimMembers) />
 	<cfset transactionType = "Swim Pass Purchase" />
 	<cfset request.paypal_item = "SQUID+Swims+Pass+Purchase" />
 <cfelse>
-	<cfset swimsCost = attributes.numSwims * Request.pricePerSwim />
+	<cfset swimsCost = attributes.numSwims * request.pricePerSwimMembers />
 	<cfset request.totalSwims = attributes.numSwims + (attributes.numSwims \ request.purchasedSwimsPerFreeSwim) />
 	<cfset transactionType = "Swim Purchase" />
 	<cfset request.paypal_item = "SQUID+Swims+Purchase" />

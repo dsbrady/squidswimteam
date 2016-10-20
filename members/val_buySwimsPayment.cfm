@@ -38,7 +38,7 @@
 <cfparam name="attributes.billingZip" default="" type="string" />
 <cfparam name="attributes.billingCountry" default="" type="string" />
 
-<cfset swimsCost = attributes.numSwims * Request.pricePerSwim />
+<cfset swimsCost = attributes.numSwims * request.pricePerSwimMembers />
 <cfset request.totalSwims = attributes.numSwims + (attributes.numSwims \ request.purchasedSwimsPerFreeSwim) />
 <cfset transactionType = "Swim Purchase" />
 <cfset request.paypal_item = "SQUID+Swims+Purchase" />

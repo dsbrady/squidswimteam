@@ -72,7 +72,7 @@
 
 	<!--- If they're buying swims, add that into the practiceTransaction table --->
 	<cfif attributes.numSwims GT 0>
-		<cfset request.swimsCost = attributes.numSwims * Request.pricePerSwim />
+		<cfset request.swimsCost = attributes.numSwims * request.pricePerSwimMembers />
 		<cfset request.totalSwims = attributes.numSwims + (attributes.numSwims \ request.purchasedSwimsPerFreeSwim) />
 		<cfif request.swimsCost LT 0>
 			<cfset request.swimsCost = 0>
