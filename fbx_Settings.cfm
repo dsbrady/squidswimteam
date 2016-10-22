@@ -256,7 +256,7 @@ OTHER SETTINGS
 		{
 			Request.showError = true;
 		}
-Request.showError = true;
+		Request.showError = true;
 	</cfscript>
 </cflock>
 
@@ -274,11 +274,27 @@ Request.showError = true;
 
 <cfif NOT structKeyExists(application,"stPaypalSettings")>
 	<cfset application.stPayPalSettings = structNew() />
-	<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
-	<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
-	<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
-	<cfset application.stPayPalSettings.apiVersion = "94.0" />
-	<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+
+	<cfif application.environment IS "development">
+		<!--- Certificate apparently isn't in CF's store, so commenting out and using prod (ugh)
+		<cfset application.stPayPalSettings.apiUsername = "paypalSandbox_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "X3V9Z3DDSNXW6CZF" />
+		<cfset application.stPayPalSettings.apiSignature = "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AyexxKECJo43UKDFxtXxP4mLKceT" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.sandbox.paypal.com/nvp" />
+		 --->
+		<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
+		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+	<cfelse>
+		<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
+		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+	</cfif>
 </cfif>
 
 <!--- Insert Privacy Policy Header --->

@@ -2,7 +2,7 @@
 	<cffunction name="verifyPaypal" access="public" displayname="verifyPaypal" hint="Submits verification token to PayPal" output="No" returntype="string">
 		<cfargument name="txToken" required="yes" type="string" />
 		<cfargument name="paypalToken" required="yes" type="string" />
-		
+
 		<cfset var qrystring = "cmd=_notify-synch&tx=" & txToken & "&at=" & paypalToken />
 
 		<cfhttp url="https://www.paypal.com/cgi-bin/webscr?#qryString#" method="GET" resolveurl="No" />
@@ -25,7 +25,7 @@
 			<cfloop list="#arguments.content#" index="i" delimiters="#CHR(10)#">
 				<cfset success.paypal[ListFirst(i,"=")] = ListLast(i,"=")>
 			</cfloop>
-			
+
 			<cfset success.paypal.success = true />
 		<cfelse>
 			<!--- Failure --->
@@ -68,6 +68,7 @@
 			<cfhttpparam type="url" name="desc" value="#arguments.stPaymentData.desc#" />
 		</cfhttp>
 		<cfset local.stResults.stPayPalResults = convertResponseToStruct(local.stPayPalResults.fileContent) />
+
 		<cfif local.stResults.stPayPalResults.ack DOES NOT CONTAIN "Success">
 			<cfset local.stResults.isSuccessful = false />
 			<cfset arrayAppend(local.stResults.aErrors,"There was a problem processing your payment. If you feel this is an error, please contact us.") />

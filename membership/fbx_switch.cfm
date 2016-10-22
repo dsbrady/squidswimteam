@@ -1,4 +1,4 @@
-<!--- 
+<!---
 <fusedoc fuse="FBX_Switch.cfm">
 	<responsibilities>
 		I am the cfswitch statement that handles the fuseaction, delegating work to various fuses.
@@ -13,7 +13,7 @@
 				<string name="circuit" />
 			</structure>
 		</in>
-	</io>	
+	</io>
 </fusedoc>
  --->
 
@@ -70,7 +70,7 @@ FORM
 		</cfscript>
 
 		<cfinclude template="#Request.template#" />
-		<cfinclude template="/lib/creditCardCCV2.cfm" />
+		<cfinclude template="#request.siteRoot#lib/creditCardCCV2.cfm" />
 	</cfcase>
 
 	<cfcase value="act_membershipPayment">
@@ -78,7 +78,7 @@ FORM
 		<cfset request.suppressLayout = true />
 		<cfset request.template = "val_membershipPayment.cfm" />
 		<cfset XFA.next = "membership.dsp_membershipFormResults" />
-		
+
 		<cfinclude template="#request.template#" />
 	</cfsilent>
 	</cfcase>
@@ -91,7 +91,7 @@ FORM
 			XFA.paypalReturn = "membership.act_membershipFormReturn";
 
 			Request.suppressLayout = true;
-			
+
 			memberCFC = CreateObject("component",Request.members_cfc);
 			lookupCFC = CreateObject("component",Request.lookup_cfc);
 
@@ -172,7 +172,7 @@ FORM
 		<cfset Request.template = "dsp_newMemberPayment.cfm" />
 
 		<cfset request.profileCFC = CreateObject("component",Request.profile_cfc) />
-		
+
 		<cfinclude template="val_newMemberForm.cfm" />
 		<cfif NOT request.stSuccess.isSuccessful>
 			<cfset XFA.next = "membership.newMemberForm" />
@@ -188,7 +188,7 @@ FORM
 		<cfelse>
 			<cfset XFA.next = "membership.newMemberSubmit" />
 			<cfinclude template="#Request.template#" />
-			<cfinclude template="/lib/creditCardCCV2.cfm" />
+			<cfinclude template="#request.siteRoot#lib/creditCardCCV2.cfm" />
 		</cfif>
 	</cfcase>
 
@@ -200,7 +200,7 @@ FORM
 			XFA.next = "membership.newMemberResults";
 
 			request.suppressLayout = true;
-			
+
 			Request.template = "val_newMemberSubmit.cfm";
 		</cfscript>
 

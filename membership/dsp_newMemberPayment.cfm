@@ -99,7 +99,7 @@
 	<fieldset>
 		<legend>Buy Swims</legend>
 		<div class="duesContainer">
-			<cfmodule template="/lib/buySwimsConfirmation.cfm" numSwims="#attributes.numSwims#">
+			<cfmodule template="#request.siteRoot#lib/buySwimsConfirmation.cfm" numSwims="#attributes.numSwims#">
 			<input type="hidden" name="numSwims" value="#attributes.numSwims#" />
 		</div>
 	</fieldset>
@@ -338,7 +338,7 @@
 <!--- 1/9/2013: removing this, but only commenting it out in case they change their minds
 	<fieldset>
 		<legend>Visitor Information</legend>
-		
+
 		<div class="contactContainer">
 			<div class="contactLabel">
 				Visitor?
@@ -379,10 +379,10 @@
 	<fieldset>
 		<legend>Liability Waiver</legend>
 		<div class="liabilityContainer">
-			I, the undersigned participant, intending to be legally bound, hereby certify that I am physically fit and have not been otherwise informed by a physician. 
-			I ackowledge that I am aware of all the risks inherent in Masters swimming (training and competition), including possible permanent disability or death, 
-			and agree to assume all of those risks. As a condition of my participation in the Masters Swimming Program or any activities hereto, I hereby waive any 
-			and all rights to claims for loss or damages, including all claims for loss or damages caused by the negligence, active or passive, of Colorado 
+			I, the undersigned participant, intending to be legally bound, hereby certify that I am physically fit and have not been otherwise informed by a physician.
+			I ackowledge that I am aware of all the risks inherent in Masters swimming (training and competition), including possible permanent disability or death,
+			and agree to assume all of those risks. As a condition of my participation in the Masters Swimming Program or any activities hereto, I hereby waive any
+			and all rights to claims for loss or damages, including all claims for loss or damages caused by the negligence, active or passive, of Colorado
 			SQUID Swim Team, or any individuals supervising such activities.
 		</div>
 		<div class="liabilityContainer">
@@ -514,5 +514,5 @@
 		<button type="submit" id="submitBtn" name="submitBtn" value="Complete Transaction">Complete Transaction</button>
 	</div>
 </form>
-<cfinclude template="/lib/additionalFees.cfm" />
+<cfinclude template="#request.siteRoot#lib/additionalFees.cfm" />
 </cfoutput>

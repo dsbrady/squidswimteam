@@ -396,7 +396,7 @@ SWIMS/TRANSACTIONS
 		</cfscript>
 
 		<cfinclude template="#Request.template#">
-		<cfinclude template="/lib/creditCardCCV2.cfm" />
+		<cfinclude template="#request.siteRoot#lib/creditCardCCV2.cfm" />
 	</cfcase>
 
 	<cfcase value="act_buySwimsPayment">
@@ -404,7 +404,7 @@ SWIMS/TRANSACTIONS
 		<cfset request.suppressLayout = true />
 		<cfset request.template = "val_buySwimsPayment.cfm" />
 		<cfset XFA.next = "members.dsp_buySwims_results" />
-		
+
 		<cfinclude template="#request.template#" />
 	</cfsilent>
 	</cfcase>

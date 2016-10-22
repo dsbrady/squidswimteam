@@ -45,6 +45,7 @@
 <cfif swimsCost LT 0>
 	<cfset swimsCost = 0>
 </cfif>
+
 <!--- Get transaction type --->
 <cfset qTransaction = request.lookupCFC.getTransactionTypes(Request.dsn,Request.transaction_typeTbl,0,false,variables.transactionType)>
 
@@ -52,7 +53,6 @@
 <cfset stSuccess = request.membersCFC.buySwims(Request.dsn,Request.practice_transactionTbl,qTransaction.transaction_type_id,Request.squid.user_id,request.totalSwims,Request.squid.user_id) />
 
 <cfset request.squidTransactionID = stSuccess.transaction_id />
-
 
 <cfset request.stPaypal = structNew() />
 <cfset request.stPaypal.paymentAction = "Sale" />

@@ -51,7 +51,6 @@
 </cfif>
 <cfoutput>
 <form name="buySwimsForm" id="buySwimsForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post">
-	<input type="hidden" name="numSwims" value="#VAL(attributes.numSwims)#" />
 	<input type="hidden" name="address1" id="address1" value="#session.squid.address1#" />
 	<input type="hidden" name="city" id="city" value="#session.squid.city#" />
 	<input type="hidden" name="state" id="state" value="#session.squid.state_id#" />
