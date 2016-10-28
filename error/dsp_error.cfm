@@ -15,7 +15,7 @@
 	variables.errorNum = "SQUID" & NumberFormat(RandRange(1,99999),"00000") & DateFormat(Now(),"yyyymmdd") & TimeFormat(Now(),"HHmmss");
 </cfscript>
 <!--- Send e-mail --->
-<cfif NOT listFindNoCase(arrayToList(request.ignoreBrowsers),error.browser)>
+<cfif NOT request.showError AND NOT listFindNoCase(arrayToList(request.ignoreBrowsers),error.browser)>
 	<cfmail server="mail.squidswimteam.org" from="#Request.webmaster_email#" to="#Request.webmaster_email#" subject="SQUID Web Site Error - #variables.errorNum#" type="HTML">
 	<p>
 	A user has encountered an error on the SQUID web site.  The error information is below:

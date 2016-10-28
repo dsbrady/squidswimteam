@@ -210,13 +210,6 @@
 									</td>
 								</tr>
 							</cfif>
-							<cfif VAL(Request.squid.tester_id) OR VAL(Request.squid.developer_id)>
-								<tr align="left">
-									<td>
-										<a href="#Request.self#?fuseaction=#XFA.issues#">Update Issues/Bugs</a>
-									</td>
-								</tr>
-							</cfif>
 							<cfif Secure("Update Financials") OR Secure("Update Practices")>
 								<tr align="left">
 									<td>

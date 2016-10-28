@@ -86,7 +86,7 @@ Uncomment this if you wish to have code specific that only executes if the circu
 		Request.privacy_template = "lib/dsp_privacy.cfm";
 		Request.images_folder = "/images";
 		Request.member_picture_folder = "/members/photos";
-		Request.member_picture_path = "c:\data\inetpub\wwwroot\squidswimteam\members\photos";
+		Request.member_picture_path = "d:\inetpub\squidswimteam\members\photos";
 		Request.from_email = "dsbrady@protonmail.com";
 		Request.admin_email = "dsbrady@protonmail.com";
 		Request.webmaster_email = "dsbrady@protonmail.com";
@@ -244,21 +244,11 @@ OTHER SETTINGS
 </cfif>
 
 <!--- Get session variables, if they exist --->
-<cflock scope="SESSION" timeout="30" type="EXCLUSIVE">
-	<cfscript>
-		if (NOT StructKeyExists(Session,"squid"))
-		{
-			Session.squid.user_id = 0;
-		}
-		Request.squid = StructCopy(Session.squid);
+<cfset request.squid = duplicate(session.squid) />
 
-		if (Request.squid.user_id EQ 1)
-		{
-			Request.showError = true;
-		}
-		Request.showError = true;
-	</cfscript>
-</cflock>
+<cfif (request.squid.user_id EQ 1 OR application.environment EQ "development")>
+	<cfset request.showError = true />
+</cfif>
 
 <cfif NOT structKeyExists(application,"qStates")>
 	<cfset application.qStates = request.lookupCFC.getStates(dsn=request.dsn,stateTbl=request.stateTbl) />
