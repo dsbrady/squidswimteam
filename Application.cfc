@@ -28,7 +28,6 @@
 			<cfset application.environment = "production" />
 			<cfset application.dsn = "squidSQL" />
 		</cfif>
-
 	</cffunction>
 
 <!---
@@ -66,6 +65,7 @@
 		<cfif getFileFromPath(getBaseTemplatePath()) NEQ "index.cfm">
 			<cflocation addtoken="no" url="index.cfm" />
 		</cfif>
+		<cfset request.squid = structCopy(session.squid) />
 	</cffunction>
 
 	<cffunction name="onSessionStart">

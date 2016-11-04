@@ -209,6 +209,27 @@ LOGOUT
 		<cfinclude template="#Request.template#">
 	</cfcase>
 
+<!--- ----------------------------------------
+INLINE LOGIN
+----------------------------------------- --->
+	<cfcase value="inlineLogin">
+		<cfparam name="attributes.returnFA" default="home.start" type="string" />
+		<cfset request.modalLayout = true />
+		<cfset XFA.changePassword = "#fusebox.circuit#.dsp_change_password" />
+		<cfset XFA.forgottenPassword = "#fusebox.circuit#.dsp_forgotten_password" />
+		<cfset XFA.submit = "#fusebox.circuit#.ajaxValidateLogin" />
+
+		<cfset arrayAppend(request.jsOther,"#request.siteRoot#/javascript/external/jquery/jquery-3.1.1.min.js") />
+		<cfset arrayAppend(request.jsOther,"#request.siteRoot#/javascript/external/jquery/jquery.form.min.js") />
+		<cfset arrayAppend(request.jsOther,"#request.siteRoot#/javascript/external/jquery/validate/jquery.validate.min.js") />
+
+		<cfinclude template="frm_inlineLogin.cfm" />
+	</cfcase>
+
+	<cfcase value="ajaxValidateLogin">
+		<cfset request.blankLayout = true />
+		<cfinclude template="act_validateLogin.cfm" />
+	</cfcase>
 
 <!--- ----------------------------------------
 DEFAULT

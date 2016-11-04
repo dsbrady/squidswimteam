@@ -18,6 +18,10 @@ img {
 	border: 0px;
 }
 
+a.cancel {
+	padding-left: 15px;
+}
+
 .newsHead {
 	font-weight: bold;
 }
@@ -255,6 +259,11 @@ span.clickable, a {
 	color: #0000FF;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.email-label-container {
+	float: left;
+	margin-right: 40px;
 }
 
 #numberOfSwimsLabelContainer {

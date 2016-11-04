@@ -10,7 +10,7 @@ component accessors = "true" extends="Base" {
 	property name = "comments" type = "string" default = "";
 	property name = "createdDate" type = "date";
 	property name = "createdUserID" type = "numeric" default = 0;
-	property name = "country" type = "string" default = "";
+	property name = "country" type = "string" default = "US";
 	property name = "email" type = "string" default = "";
 	property name = "emailPreference" type = "string" default = "";
 	property name = "emailPreferenceID" type = "numeric" default = 1;

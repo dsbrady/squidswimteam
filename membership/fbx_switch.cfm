@@ -36,22 +36,6 @@ FORM
 		<cfinclude template="#Request.template#">
 	</cfcase>
 
-<!--- 1/13/2013 - not used any more
-	<cfcase value="dsp_membershipConfirm">
-	<!--- Displays Dues Payment Confirmation screen --->
-		<cfscript>
-			Request.page_title = Request.page_title & "<br />Membership Confirmation";
-
-			Request.template = "dsp_membershipConfirm.cfm";
-
-			XFA.dues = "membership.dsp_membershipConfirm";
-			XFA.next = "membership.act_membershipForm";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfcase>
---->
-
 	<cfcase value="membershipPayment">
 	<!--- Displays Membership Payment screen --->
 		<cfscript>
@@ -82,49 +66,6 @@ FORM
 		<cfinclude template="#request.template#" />
 	</cfsilent>
 	</cfcase>
-
-<!--- 1/13/2013 - not used any more
-	<cfcase value="act_membershipForm">
-	<cfsilent>
-	<!--- Processes membership and sends on to PayPal --->
-		<cfscript>
-			XFA.paypalReturn = "membership.act_membershipFormReturn";
-
-			Request.suppressLayout = true;
-
-			memberCFC = CreateObject("component",Request.members_cfc);
-			lookupCFC = CreateObject("component",Request.lookup_cfc);
-
-			Request.template = "val_membershipForm.cfm";
-
-			/* ************************************
-			PAYPAL SETTINGS
-			************************************ */
-			Request.paypal_returnURL = Request.theServer & "/index.cfm%3Ffuseaction%26" & XFA.payPalReturn;
-			Request.paypal_item = "SQUID+Membership";
-			Request.paypal_itemNo = "";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfsilent>
-	</cfcase>
-
-	<cfcase value="act_membershipFormReturn">
-	<cfsilent>
-	<!--- Processes swims after coming back from PayPal --->
-		<cfscript>
-			XFA.next = "membership.dsp_membershipFormResults";
-			payPalCFC = CreateObject("component",Request.paypal_cfc);
-			memberCFC = CreateObject("component",Request.members_cfc);
-			lookupCFC = CreateObject("component",Request.lookup_cfc);
-
-			Request.template = "act_membershipFormReturn.cfm";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfsilent>
-	</cfcase>
---->
 
 	<cfcase value="dsp_membershipFormResults">
 	<!--- Displays Pay Dues results screen (after PayPal) --->
