@@ -76,7 +76,7 @@ SWIM PASS REMINDERS
 	<!--- Sends out reminders for swim passes that are about to expire and those that have expired --->
 		<cfscript>
 			Request.suppressLayout = true;
-			XFA.buySwims = "members.dsp_buySwims";
+			XFA.buySwims = "buySwims.home";
 
 			request.reminderDays1 = 7;
 			request.reminderDays2 = 3;

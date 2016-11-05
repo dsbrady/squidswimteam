@@ -26,9 +26,9 @@
 <!---
 Uncomment this if you wish to have code specific that only executes if the circuit running is the home circuit.
 --->
+
 <cfif fusebox.IsHomeCircuit>
 	<!--- put settings here that you want to execute only when this is the application's home circuit (for example "<cfapplication>" )--->
-	<cfapplication name="squid" applicationtimeout="#CreateTimeSpan(0,1,0,0)#" clientmanagement="No" sessionmanagement="Yes" sessiontimeout="#CreateTimeSpan(0,1,0,0)#" setclientcookies="Yes">
 
 	<cfscript>
 		XFA.home = "home.dsp_content";
@@ -74,18 +74,19 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	request.pricePerSwimNonMembers = 7.50;
 	request.purchasedSwimsPerFreeSwim = 10;
 
-	if (listLast(cgi.server_name,".") IS NOT "org" OR listFirst(cgi.script_name,"/") IS "dev")
+	if (application.environment == "development")
 	{
 	/* Development */
+		request.siteRoot = "/dev/";
 		Request.DSN = "squidSQL";
-		Request.theServer = "http://" & CGI.server_name & "/dev";
+		Request.theServer = "https://" & CGI.server_name & "/dev";
 		Request.js_default = Request.theServer & "/javascript/default.js";
 		Request.ss_main = Request.theServer & "/styles/main.css";
 		variables.baseHREF = Request.theServer & "/";
 		Request.privacy_template = "lib/dsp_privacy.cfm";
 		Request.images_folder = "/images";
 		Request.member_picture_folder = "/members/photos";
-		Request.member_picture_path = "c:\data\inetpub\wwwroot\squidswimteam\members\photos";
+		Request.member_picture_path = "d:\inetpub\squidswimteam\members\photos";
 		Request.from_email = "dsbrady@protonmail.com";
 		Request.admin_email = "dsbrady@protonmail.com";
 		Request.webmaster_email = "dsbrady@protonmail.com";
@@ -108,6 +109,7 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	else
 	{
 		/* Production */
+		request.siteRoot = "/";
 		Request.DSN = "squidSQL";
 		Request.theServer = "https://www.squidswimteam.org";
 		Request.js_default = Request.theServer & "/javascript/default.js";
@@ -242,21 +244,11 @@ OTHER SETTINGS
 </cfif>
 
 <!--- Get session variables, if they exist --->
-<cflock scope="SESSION" timeout="30" type="EXCLUSIVE">
-	<cfscript>
-		if (NOT StructKeyExists(Session,"squid"))
-		{
-			Session.squid.user_id = 0;
-		}
-		Request.squid = StructCopy(Session.squid);
+<cfset request.squid = duplicate(session.squid) />
 
-		if (Request.squid.user_id EQ 1)
-		{
-			Request.showError = true;
-		}
-Request.showError = true;
-	</cfscript>
-</cflock>
+<cfif (request.squid.user_id EQ 1 OR application.environment EQ "development")>
+	<cfset request.showError = true />
+</cfif>
 
 <cfif NOT structKeyExists(application,"qStates")>
 	<cfset application.qStates = request.lookupCFC.getStates(dsn=request.dsn,stateTbl=request.stateTbl) />
@@ -272,11 +264,29 @@ Request.showError = true;
 
 <cfif NOT structKeyExists(application,"stPaypalSettings")>
 	<cfset application.stPayPalSettings = structNew() />
-	<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
-	<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
-	<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
-	<cfset application.stPayPalSettings.apiVersion = "94.0" />
-	<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+
+	<cfif application.environment IS "development">
+		<!--- Certificate apparently isn't in CF's store, so commenting out and using prod (ugh)
+		<cfset application.stPayPalSettings.apiUsername = "paypalSandbox_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "X3V9Z3DDSNXW6CZF" />
+		<cfset application.stPayPalSettings.apiSignature = "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AyexxKECJo43UKDFxtXxP4mLKceT" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.sandbox.paypal.com/nvp" />
+		 --->
+		<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
+		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+		<cfset application.stPayPalSettings.verificationURL = "https://www.paypal.com/cgi-bin/webscr" />
+	<cfelse>
+		<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
+		<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
+		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
+		<cfset application.stPayPalSettings.apiVersion = "94.0" />
+		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+		<cfset application.stPayPalSettings.verificationURL = "https://www.paypal.com/cgi-bin/webscr" />
+	</cfif>
 </cfif>
 
 <!--- Insert Privacy Policy Header --->

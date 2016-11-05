@@ -427,7 +427,7 @@ OTHER TRANSACTIONS
 			XFA.delete = "accounting.act_transactions_delete";
 			XFA.practice_edit = "accounting.dsp_practices_edit";
 			XFA.practice_delete = "accounting.act_practices_delete";
-			XFA.buySwims = "members.dsp_buySwims";
+			XFA.buySwims = "buySwims.home";
 		</cfscript>
 
 		<cfinclude template="#Request.template#">

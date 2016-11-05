@@ -18,16 +18,17 @@
 --->
 
 <cfscript>
-	Fusebox.circuits.home = "squid";
-	Fusebox.circuits.members = "squid/members";
-	Fusebox.circuits.admin = "squid/admin";
-	Fusebox.circuits.login = "squid/login";
 	Fusebox.circuits.accounting = "squid/accounting";
-	Fusebox.circuits.content = "squid/content";
+	Fusebox.circuits.admin = "squid/admin";
+	Fusebox.circuits.buySwims = "squid/buySwims";
 	Fusebox.circuits.calendar = "squid/calendar";
-	Fusebox.circuits.scheduled = "squid/scheduled";
+	Fusebox.circuits.content = "squid/content";
+	Fusebox.circuits.home = "squid";
+	Fusebox.circuits.login = "squid/login";
 	Fusebox.circuits.meetAdmin = "squid/meetAdmin";
+	Fusebox.circuits.members = "squid/members";
 	Fusebox.circuits.membership = "squid/membership";
+	Fusebox.circuits.scheduled = "squid/scheduled";
 	Fusebox.circuits.survey = "squid/survey";
 	Fusebox.circuits.surveyAdmin = "squid/survey/admin";
 	Fusebox.circuits.utilities = "squid/utilities";

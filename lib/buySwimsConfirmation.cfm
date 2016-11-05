@@ -1,7 +1,7 @@
 <cfsilent>
 	<!--- I display the buy swims confirmation content --->
 	<cfparam name="attributes.numSwims" default="0" type="numeric" />
-	<cfset swimsCost = attributes.numSwims * Request.pricePerSwim />
+	<cfset swimsCost = attributes.numSwims * request.pricePerSwimMembers />
 	<cfset additionalSwims = attributes.numSwims \ request.purchasedSwimsPerFreeSwim />
 	<cfif swimsCost LT 0>
 		<cfset swimsCost = 0>
