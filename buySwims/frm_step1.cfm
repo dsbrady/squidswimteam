@@ -1,5 +1,3 @@
-<!--- TODO: when entering an email address, look to see if there's a user with that address and prompt them to login --->
-
 <cfoutput>
 
 <script type="text/javascript">
@@ -8,7 +6,7 @@
 
 <form name="buySwims" id="buyswims" action="#request.self#" method="post">
 	<input type="hidden" name="fuseaction" value="#XFA.next#" />
-	<input type="hidden" name="fullName" id="fullname" value="#getUser().getFirstName()# #getUser().getLastName()#"
+	<input type="hidden" name="fullName" id="fullname" value="#getUser().getFirstName()# #getUser().getLastName()#" />
 	<input type="hidden" name="address1" id="address1" value="#getUser().getAddress1()#" />
 	<input type="hidden" name="city" id="city" value="#getUser().getCity()#" />
 	<input type="hidden" name="state" id="state" value="#getUser().getStateID()#" />
@@ -84,6 +82,7 @@
 					<cfif session.squid.user.getUserID() EQ 0>
 						<input type="text" name="email" id="email" size="50" placeholder="name@example.com" value="#attributes.email#" />
 					<cfelse>
+						#getUser().getEmail()#
 						<input type="hidden" name="email" id="email" value="#getUser().getEmail()#" />
 					</cfif>
 				</td>
@@ -201,7 +200,7 @@
 									</cfif>
 								</td>
 								<td>
-									<input type="text" name="billingStreet" id="billingStreet" size="25" maxlength="255" value="#attributes.billingStreet#" />
+									<input type="text" name="billingStreet" id="billingstreet" size="25" maxlength="255" value="#attributes.billingStreet#" />
 								</td>
 							</tr>
 							<tr valign="top">
@@ -218,14 +217,14 @@
 									</cfif>
 								</td>
 								<td>
-									<input type="text" name="billingCity" id="billingCity" size="15" maxlength="50" value="#attributes.billingCity#" />
-									<select name="billingState" id="billingState" size="1">
+									<input type="text" name="billingCity" id="billingcity" size="15" maxlength="50" value="#attributes.billingCity#" />
+									<select name="billingState" id="billingstate" size="1">
 										<option value="" <cfif attributes.billingCountry IS 0>selected="true"</cfif>>(non-US)</option>
 									<cfloop query="application.qStates">
 										<option value="#application.qStates.state_id#" <cfif attributes.billingState IS application.qStates.state_id>selected="true"</cfif>>#application.qStates.state#</option>
 									</cfloop>
 									</select>
-									<input type="text" name="billingZip" id="billingZip" size="10" maxlength="10" value="#attributes.billingZip#" />
+									<input type="text" name="billingZip" id="billingzip" size="10" maxlength="10" value="#attributes.billingZip#" />
 								</td>
 							</tr>
 							<tr valign="top">
@@ -236,7 +235,7 @@
 									</cfif>
 								</td>
 								<td>
-									<select name="billingCountry" id="billingCountry" size="1">
+									<select name="billingCountry" id="billingcountry" size="1">
 									<cfloop query="application.qCountries">
 										<option value="#application.qCountries.countryCode#" <cfif attributes.billingCountry IS application.qCountries.countryCode>selected="true"</cfif>>#application.qCountries.country#</option>
 									</cfloop>
@@ -248,13 +247,6 @@
 									<em>NOTE:  You will be able to confirm your payment information on the next screen.</em>
 								</td>
 							</tr>
-			<!--- TODO: this goes on the confirmation screen
-							<tr valign="top">
-								<td colspan="2">
-									<em>NOTE:  Your payment will be processed via PayPal.  This transaction is secure.  SQUID does not store any of your payment information.</em>
-								</td>
-							</tr>
-			 --->
 						</table>
 					</fieldset>
 				</td>

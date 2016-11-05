@@ -40,7 +40,7 @@ DASHBOARD
 			XFA.meetAdmin = "meetAdmin.dsp_start";
 			XFA.times = "members.dsp_times";
 			XFA.announceDetail = "members.dsp_announcement_detail";
-			XFA.buySwims = "members.dsp_buySwims";
+			XFA.buySwims = "buySwims.home";
 			XFA.dues = "membership.dsp_membershipForm";
 			XFA.survey = "survey.dsp_start";
 			XFA.pendingAnnouncements = "members.dsp_announcements_pending";
@@ -313,7 +313,7 @@ SWIMS/TRANSACTIONS
 			Request.js_validate = "accounting/javascript/transactions.js";
 
 			XFA.export = "members.act_transactions_export";
-			XFA.buySwims = "members.dsp_buySwims";
+			XFA.buySwims = "buySwims.home";
 		</cfscript>
 
 		<cfif Request.squid.user_id EQ 469>
@@ -346,161 +346,6 @@ SWIMS/TRANSACTIONS
 		<cfinclude template="#Request.template#">
 	</cfcase>
 
-	<cfcase value="dsp_buySwims">
-		<cfparam name="attributes.swimPassID" default="0" type="numeric" />
-		<cfparam name="attributes.numSwims" default="0" type="numeric" />
-
-		<cfparam name="attributes.success" default="" type="string">
-		<cfparam name="attributes.reason" default="" type="string">
-
-		<!--- Displays Buy Swims screen --->
-		<cfscript>
-			Request.page_title = Request.page_title & "<br />Buy Swims / Pass";
-			Request.template = "dsp_buySwims.cfm";
-
-			//Get current balance
-			cfcLookup = CreateObject("component",Request.lookup_cfc);
-			Request.qMember = cfcLookup.getMembers(Request.dsn,Request.usersTbl,Request.user_statusTbl,Request.practice_transactionTbl,Request.transaction_typeTbl,Request.squid.user_id);
-			Request.qSwimPasses = cfcLookup.getSwimPasses(request.dsn,0);
-
-			XFA.next = "members.buySwimsPayment";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfcase>
-
-	<cfcase value="buySwimsPayment">
-	<!--- Displays Buy Swims Confirmation/Payment screen --->
-		<cfparam name="attributes.numSwims" default="0" type="numeric" />
-
-		<cfparam name="attributes.success" default="" type="string">
-		<cfparam name="attributes.reason" default="" type="string">
-
-		<cfscript>
-			arrayAppend(request.jsOther,"/javascript/external/jquery/jquery-1.8.3.min.js");
-			arrayAppend(request.jsOther,"/javascript/external/jquery/jquery-ui-1.9.2.custom.min.js");
-			arrayAppend(request.jsOther,"/javascript/external/creditcard.js");
-			arrayAppend(request.jsOther,"/javascript/creditCardCCV2.js");
-			arrayAppend(request.jsOther,"/members/javascript/buySwimsPayment.js");
-			arrayAppend(request.ssOther,"/styles/cupertino/jquery-ui-1.9.2.custom.min.css");
-
-			Request.page_title = Request.page_title & "<br />Buy Swims Confirmation / Payment";
-
-			cfcLookup = CreateObject("component",Request.lookup_cfc);
-			Request.qMember = cfcLookup.getMembers(Request.dsn,Request.usersTbl,Request.user_statusTbl,Request.practice_transactionTbl,Request.transaction_typeTbl,Request.squid.user_id);
-
-			Request.template = "dsp_buySwimsPayment.cfm";
-
-			XFA.buySwims = "members.dsp_buySwims";
-			XFA.next = "members.act_buySwimsPayment";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-		<cfinclude template="#request.siteRoot#lib/creditCardCCV2.cfm" />
-	</cfcase>
-
-	<cfcase value="act_buySwimsPayment">
-	<cfsilent>
-		<cfset request.suppressLayout = true />
-		<cfset request.template = "val_buySwimsPayment.cfm" />
-		<cfset XFA.next = "members.dsp_buySwims_results" />
-
-		<cfinclude template="#request.template#" />
-	</cfsilent>
-	</cfcase>
-
-<!--- 1/8/2013: no longer used
-	<cfcase value="dsp_buySwims_confirm">
-	<!--- Displays Buy Swims Confirmation screen --->
-		<cfparam name="attributes.swimPassID" default="0" type="numeric" />
-		<cfparam name="attributes.numSwims" default="0" type="numeric" />
-
-		<cfparam name="attributes.success" default="" type="string">
-		<cfparam name="attributes.reason" default="" type="string">
-
-		<cfscript>
-			Request.page_title = Request.page_title & "<br />Buy Swims Confirmation";
-
-			cfcLookup = CreateObject("component",Request.lookup_cfc);
-			Request.qMember = cfcLookup.getMembers(Request.dsn,Request.usersTbl,Request.user_statusTbl,Request.practice_transactionTbl,Request.transaction_typeTbl,Request.squid.user_id);
-			Request.qSwimPass = cfcLookup.getSwimPasses(request.dsn,val(attributes.swimPassID));
-
-			Request.template = "dsp_buySwims_confirm.cfm";
-
-			XFA.buySwims = "members.dsp_buySwims";
-			XFA.next = "members.act_buySwims";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfcase>
-
-	<cfcase value="act_buySwims">
-	<cfsilent>
-	<!--- Processes swims and sends on to PayPal --->
-		<cfparam name="attributes.swimPassID" default="0" type="numeric" />
-		<cfparam name="attributes.numSwims" default="0" type="numeric" />
-		<cfscript>
-			XFA.paypalReturn = "members.act_buySwims_return";
-
-			Request.suppressLayout = true;
-
-			memberCFC = CreateObject("component",Request.members_cfc);
-			lookupCFC = CreateObject("component",Request.lookup_cfc);
-
-			Request.template = "val_buySwims.cfm";
-
-			//Get current balance
-			cfcLookup = CreateObject("component",Request.lookup_cfc);
-			Request.qMember = cfcLookup.getMembers(Request.dsn,Request.usersTbl,Request.user_statusTbl,Request.practice_transactionTbl,Request.transaction_typeTbl,Request.squid.user_id);
-			Request.qSwimPass = cfcLookup.getSwimPasses(request.dsn,val(attributes.swimPassID));
-
-			/* ************************************
-			PAYPAL SETTINGS
-			************************************ */
-			Request.paypal_returnURL = Request.theServer & "/index.cfm?fuseaction=" & XFA.payPalReturn;
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfsilent>
-	</cfcase>
-
-	<cfcase value="act_buySwims_return">
-	<cfsilent>
-	<!--- Processes swims after coming back from PayPal --->
-		<cfscript>
-			XFA.next = "members.dsp_buySwims_results";
-			payPalCFC = CreateObject("component",Request.paypal_cfc);
-			memberCFC = CreateObject("component",Request.members_cfc);
-			lookupCFC = CreateObject("component",Request.lookup_cfc);
-
-			Request.template = "act_buySwims_return.cfm";
-		</cfscript>
-
-		<cfinclude template="#Request.template#">
-	</cfsilent>
-	</cfcase>
---->
-
-	<cfcase value="dsp_buySwims_results">
-	<!--- Displays Buy Swims results screen (after PayPal) --->
-		<cfparam name="attributes.transaction_id" default="0" type="numeric" />
-		<cfparam name="attributes.swimsCost" default="0" type="numeric" />
-
-		<cfparam name="attributes.success" default="" type="string">
-		<cfparam name="attributes.reason" default="" type="string">
-		<cfscript>
-			XFA.buySwims = "members.dsp_buySwims";
-			Request.template = "dsp_buySwims_results.cfm";
-		</cfscript>
-
-		<!--- Get transaction details --->
-		<cfset cfcLookup = CreateObject("component",Request.lookup_cfc) />
-		<cfset request.qTrans = cfcLookup.getPaypalPurchaseTransaction(VAL(attributes.transaction_id),request.squid.user_id,request.DSN) />
-		<cfset request.qMember = cfcLookup.getMembers(Request.dsn,Request.usersTbl,Request.user_statusTbl,Request.practice_transactionTbl,Request.transaction_typeTbl,Request.squid.user_id) />
-		<cfset request.qSwimPass = cfcLookup.getUsersSwimPassesByID(request.dsn,val(request.qTrans.usersSwimPassID)) />
-
-		<cfinclude template="#Request.template#">
-	</cfcase>
 
 <!--- ----------------------------------------
 MEMBER LIST EXPORT
@@ -583,7 +428,7 @@ PROFILE/MEMBERS
 			Request.user_cfc = Request.cfcPath & ".login";
 			XFA.next = "members.act_profile";
 			XFA.delete_picture = "members.act_profile_delete_picture";
-			XFA.buySwims = "members.dsp_buySwims";
+			XFA.buySwims = "buySwims.home";
 			XFA.dues = "membership.dsp_membershipForm";
 
  			if ((CompareNoCase(attributes.actionType,"view") NEQ 0) AND (attributes.user_id EQ Request.squid.user_id OR Secure("Update Members")))

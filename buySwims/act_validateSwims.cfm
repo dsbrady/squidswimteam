@@ -71,7 +71,7 @@
 		<cfif getUser().getUserID() EQ 0>
 			<cfset request.isMember = false />
 			<cfset user = new squid.Users(request.dsn).getByEmailAddress(attributes.email) />
-			<cfset request.isMember = variables.user.getUserID() GT 0 />
+			<cfset request.isMember = variables.user.getUserStatus() IS "Member" />
 		<cfelse>
 			<cfset request.isMember = true />
 		</cfif>

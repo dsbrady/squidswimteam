@@ -24,9 +24,17 @@
 		<cfif (listLast(cgi.server_name,".") IS NOT "org" OR listFirst(cgi.script_name,"/") IS "dev")>
 			<cfset application.environment = "development" />
 			<cfset application.dsn = "squidSQL" />
+			<cfset application.mailSettings = {
+				mailServer: "mail.squidswimteam.org",
+				defaultSender: "squid@squidswimteam.org"
+			} />
 		<cfelse>
 			<cfset application.environment = "production" />
 			<cfset application.dsn = "squidSQL" />
+			<cfset application.mailSettings = {
+				mailServer: "mail.squidswimteam.org",
+				defaultSender: "squid@squidswimteam.org"
+			} />
 		</cfif>
 	</cffunction>
 

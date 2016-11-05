@@ -92,13 +92,20 @@ $(function() {
 			}
 	});
 
-	// TODO: populate billing address (after logged in)
 	$('#usecontactaddress').on('click', function() {
 			if ($(this).prop('checked')) {
-
+				$('#billingstreet').val($('#address1').val());
+				$('#billingcity').val($('#city').val());
+				$('#billingstate').val($('#state').val());
+				$('#billingzip').val($('#zip').val());
+				$('#billingcountry').val($('#country').val());
 			}
 			else {
-
+				$('#billingstreet').val('').focus();
+				$('#billingcity').val('');
+				$('#billingstate').val('CO');
+				$('#billingzip').val('');
+				$('#billingcountry').val('US');
 			}
 		});
 });

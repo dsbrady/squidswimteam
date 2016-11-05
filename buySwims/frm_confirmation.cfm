@@ -30,7 +30,7 @@
 			<tr valign="top">
 				<td colspan="2" align="center">
 					<cfif session.squid.user.getUserID() GT 0>
-						<a href="#Request.self#?fuseaction=#XFA.menu#">Menu</a>
+						<a href="#Request.self#?fuseaction=#XFA.members#">Menu</a>
 					<cfelse>
 						<a href="#Request.self#?fuseaction=#XFA.home#">Home</a>
 					</cfif>

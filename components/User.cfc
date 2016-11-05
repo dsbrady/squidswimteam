@@ -19,7 +19,7 @@ component accessors = "true" extends="Base" {
 	property name = "expirationDate" type = "date" default = "12/31/2999 23:59:59";
 	property name = "fax" type = "string" default = "";
 	property name = "firstName" type = "string" default = "";
-	property name = "firstPractice" type = "date";
+	property name = "firstPractice" type = "string" default = "";
 	property name = "isOnMailingList" type = "boolean" default = false;
 	property name = "isPasswordTemporary" type = "boolean" default = true;
 	property name = "isProfileVisible" type = "boolean" default = true;
@@ -144,7 +144,7 @@ component accessors = "true" extends="Base" {
 			setExpirationDate(local.userInfo.date_expiration);
 			setFax(local.userInfo.fax);
 			setFirstName(local.userInfo.first_name);
-			setFirstPractice(local.userInfo.first_practice);
+			setFirstPractice(isValid("date", local.userInfo.first_practice) ? local.userInfo.first_practice : "");
 			setIsOnMailingList(local.userInfo.mailingListYN);
 			setIsPasswordTemporary(local.userInfo.tempPassword);
 			setIsProfileVisible(local.userInfo.profile_visible);

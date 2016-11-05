@@ -278,12 +278,14 @@ OTHER SETTINGS
 		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
 		<cfset application.stPayPalSettings.apiVersion = "94.0" />
 		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+		<cfset application.stPayPalSettings.verificationURL = "https://www.paypal.com/cgi-bin/webscr" />
 	<cfelse>
 		<cfset application.stPayPalSettings.apiUsername = "squid_api1.squidswimteam.org" />
 		<cfset application.stPayPalSettings.apiPassword = "D5UENRLRZSLPRBKC" />
 		<cfset application.stPayPalSettings.apiSignature = "ArCg8AlipMRoK3B6iQptTvxThjrjA7ygfQn8bPNQ5j7IWC-9jdEDLANx" />
 		<cfset application.stPayPalSettings.apiVersion = "94.0" />
 		<cfset application.stPayPalSettings.apiUrl = "https://api-3t.paypal.com/nvp" />
+		<cfset application.stPayPalSettings.verificationURL = "https://www.paypal.com/cgi-bin/webscr" />
 	</cfif>
 </cfif>
 

@@ -72,13 +72,58 @@
 		<cfinclude template="frm_confirmation.cfm" />
 	</cfcase>
 	<cfcase value="makePayment">
-<cfdump var="#attributes#">
-<cfabort>
+		<cfparam name="attributes.email" default="" type="string">
+		<cfparam name="attributes.numSwims" default="10" type="numeric" />
+		<cfparam name="attributes.nameOnCard" default="#getUser().getUserID() GT 0 ? '#getUser().getFirstName()# #getUser().getLastName()#' : ''#" type="string" />
+		<cfparam name="attributes.billingStreet" default="#getUser().getAddress1()#" type="string" />
+		<cfparam name="attributes.billingCity" default="#getUser().getCity()#" type="string" />
+		<cfparam name="attributes.billingState" default="#getUser().getStateID()#" type="string" />
+		<cfparam name="attributes.billingZip" default="#getUser().getZip()#" type="string" />
+		<cfparam name="attributes.billingCountry" default="#getUser().getCountry()#" type="string" />
 
+		<cfset request.suppressLayout = true />
+		<cfset XFA.success = "#fusebox.circuit#.thanks" />
+		<cfset XFA.failure = "#fusebox.circuit#.home" />
+
+		<cfinclude template="act_makePayment.cfm" />
+		<cfset values = {
+			"email": attributes.email,
+			"numSwims": attributes.numSwims,
+			"totalSwims": request.totalSwims,
+			"cost": request.totalCost,
+			"name": "#request.squid.user.getPreferredName()# #request.squid.user.getLastName()#",
+			"nameOnCard": attributes.nameOnCard,
+			"billingStreet": attributes.billingStreet,
+			"billingCity": attributes.billingCity,
+			"billingState": attributes.billingState,
+			"billingZip": attributes.billingZip,
+			"billingCountry": attributes.billingCountry
+		} />
+		<cfif getResponse().hasFieldErrors()>
+			<cflocation url="#request.self#?fuseaction=#XFA.failure#&errors=#encodeString(serializeJSON(getResponse().getFieldErrors()))#&values=#encodeString(serializeJSON(values))#" addtoken="false" />
+		<cfelse>
+			<cfset values["payPalTransactionID"] = results.payPalResults.transactionID />
+			<cflocation url="#request.self#?fuseaction=#XFA.success#&values=#encodeString(serializeJSON(values))#" addtoken="false" />
+		</cfif>
 	</cfcase>
 	<cfcase value="modalCVV2Help">
 		<cfset request.blankLayout = "true" />
 		<cfinclude template="dsp_cvv2Help.cfm" />
+	</cfcase>
+	<cfcase value="thanks">
+		<cfparam name="attributes.values" default="{}" type="string" />
+
+		<cfset request.values = deserializeJSON(decodeString(attributes.values)) />
+
+		<cfif NOT structIsEmpty(request.values)>
+			<cfloop collection="#request.values#" item="key">
+				<cfset attributes[key] = request.values[key] />
+			</cfloop>
+		</cfif>
+
+		<cfset request.page_title = Request.page_title & "<br />Buy Swims Successful!" />
+
+		<cfinclude template="dsp_thanks.cfm" />
 	</cfcase>
 	<cfdefaultcase>
 		<!---This will just display an error message and is useful in catching typos of fuseaction names while developing--->

@@ -11,9 +11,9 @@ component accessors = "true" extends="Base" {
 		local.userQuery.setSQL("
 			SELECT user_id
 			FROM users
-			WHERE lower(email) = :email
+			WHERE email = :email
 		");
-		local.userQuery.addParam(name = "email", value = lcase(arguments.email), cfsqltype = "cf_sql_varchar");
+		local.userQuery.addParam(name = "email", value = arguments.email, cfsqltype = "cf_sql_varchar");
 		local.userInfo = local.userQuery.execute().getResult();
 
 		local.user = new User(getDSN(), local.userInfo.user_id);
