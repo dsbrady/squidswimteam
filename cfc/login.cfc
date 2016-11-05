@@ -67,6 +67,7 @@
 		<cfreturn strUser>
 	</cffunction>
 
+<!--- TODO: refactor to get rid of this and use User() instead --->
 	<cffunction name="getUser" access="public" displayname="Get User" hint="Get User Info" output="No" returntype="struct">
 		<cfargument name="user" required="Yes" type="struct">
 		<cfargument name="dsn" required="no" type="string" default="squid">
@@ -111,6 +112,7 @@
 		<cfreturn arguments.user>
 	</cffunction>
 
+<!--- TODO: refactor to get rid of this and use User() instead --->
 	<cffunction name="getUserPermissions" access="public" displayname="Get User Permissions" hint="Get User Permissions" output="No" returntype="string">
 		<cfargument name="user_id" required="Yes" type="numeric">
 		<cfargument name="objectsTbl" required="no" type="string" default="objectsTbl">
@@ -137,6 +139,7 @@
 		<cfreturn ValueList(qryPermissions.object_name,",")>
 	</cffunction>
 
+<!--- TODO: refactor to get rid of this and use User() instead --->
 	<cffunction name="getUserInfo" access="public" displayname="Get User Info" hint="Get User Info" output="No" returntype="struct">
 		<cfargument name="user" required="Yes" type="struct">
 		<cfargument name="usersTbl" required="no" type="string" default="usersTbl">
@@ -187,54 +190,22 @@
 				u.user_status_id,
 				st.status,
 				u.tempPassword,
-				d.developer_id,
-				t.tester_id,
 				u.mailingListYN,
 				u.created_date,
 				u.created_user
 			FROM
-				(
-					(
-						(
-							(
-								(
-									#arguments.usersTbl# u
-									LEFT JOIN
-									#arguments.developerTbl# d
-									ON d.user_id = u.user_id
-								)
-								LEFT JOIN
-								#arguments.testerTbl# t
-								ON t.user_id = u.user_id
-							)
-						INNER JOIN
-							#arguments.preferenceTbl# ep
-							ON ep.preference_id = u.email_preference
-						)
-						INNER JOIN
-							#arguments.preferenceTbl# pp
-							ON pp.preference_id = u.posting_preference
-					)
-					INNER JOIN
-						#arguments.preferenceTbl# cp
-						ON cp.preference_id = u.calendar_preference
-				)
-				INNER JOIN
-				#arguments.user_statusTbl# st
-				ON st.user_status_id = u.user_status_id
+				#arguments.usersTbl# u
+				INNER JOIN #arguments.preferenceTbl# ep
+					ON ep.preference_id = u.email_preference
+				INNER JOIN #arguments.preferenceTbl# pp
+					ON pp.preference_id = u.posting_preference
+				INNER JOIN #arguments.preferenceTbl# cp
+					ON cp.preference_id = u.calendar_preference
+				INNER JOIN #arguments.user_statusTbl# st
+					ON st.user_status_id = u.user_status_id
 			WHERE
 				u.user_id = <cfqueryparam value="#arguments.user.user_id#" cfsqltype="CF_SQL_INTEGER">
 				AND u.active_code = 1
-				AND
-				(
-					d.active_code = 1
-					OR d.active_code IS NULL
-				)
-				AND
-				(
-					t.active_code = 1
-					OR t.active_code IS NULL
-				)
 		</cfquery>
 
 		<cfscript>
@@ -275,8 +246,6 @@
 			arguments.user.status = qryUserInfo.user_status_id;
 			arguments.user.statusType = qryUserInfo.status;
 			arguments.user.tempPassword = qryUserInfo.tempPassword;
-			arguments.user.developer_id = VAL(qryUserInfo.developer_id);
-			arguments.user.tester_id = VAL(qryUserInfo.tester_id);
 			arguments.user.date_expiration = qryUserInfo.date_expiration;
 			arguments.user.profile_visible = qryUserInfo.profile_visible;
 			arguments.user.created_date = qryUserInfo.created_date;

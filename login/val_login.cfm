@@ -46,71 +46,91 @@
 
 </fusedoc>
 --->
-<cfparam name="variables.success" default="Yes" type="boolean">
+<cfparam name="variables.success" default="true" type="boolean">
 <cfparam name="variables.reason" default="" type="string">
 <cfparam name="attributes.username" default="" type="string">
 <cfparam name="attributes.password" default="" type="string">
 <cfparam name="attributes.returnFA" default="" type="string">
 
-<cfinvoke
-	component="#Request.login_cfc#"
-	method="checkLogin"
-	returnvariable="strUser"
-	user=#attributes.username#
-	pass=#attributes.password#
-	dsn=#Request.DSN#
-	usersTbl=#Request.usersTbl#
->
+<cfset authentication = new squid.Authentication(request.dsn) />
 
-<!--- First, see if the login was successful --->
-<cfscript>
-	if (NOT strUser.success)
-	{
-		variables.success = "No";
-		variables.reason = strUser.reason;
-	}
-</cfscript>
+<cfset userID = authentication.validateLogin(
+		username = attributes.userName,
+		password = attributes.password
+	) />
+
+<cfif userID EQ 0>
+	<cfset success = false />
+	<cfset reason = "The e-mail/password combination you entered was not found.*" />
+<cfelse>
+	<!--- Now, we'll load the user into a local object (we won't load into the session until we're sure they're still a member) --->
+	<cfset user = new squid.User(application.dsn, userID) />
+
+	<cfif user.getUserStatus() IS NOT "Member">
+		<cflocation addtoken="false" url="#Request.self#?fuseaction=#XFA.expired#&reason=Guest&first_name=#user.getPreferredName()#&user_id=#user.getUserID()#&username=#user.getUserName()#&created_date=#user.getCreatedDate()#&created_user=#user.getCreatedUserID()#" />
+	</cfif>
+
+	<cfif dateCompare(user.getExpirationDate(),now()) LT 0>
+		<cflocation addtoken="false" url="#Request.self#?fuseaction=#XFA.expired#&reason=Expired&date_expiration=#dateFormat(user.getExpirationDate(), "MMMM D, YYYY")#&first_name=#user.getPreferredName()#&user_id=#user.getUserID()#&username=#user.getUserName()#&created_date=#user.getCreatedDate()#&created_user=#user.getCreatedUserID()#" />
+	</cfif>
+
+	<!--- If we got this far, we're good to log them in --->
+	<!--- TODO: We're adding these things to a separate struct until a refactor of the app is done --->
+	<cfset session.squid = {
+		"user": user,
+		"address1": user.getAddress1(),
+		"address2": user.getAddress2(),
+		"birthday": user.getBirthday(),
+		"calendarPref": user.getCalendarPreference(),
+		"calendar_preference": user.getCalendarPreferenceID(),
+		"city": user.getCity(),
+		"comments": user.getComments(),
+		"contact_emergency": user.getEmergencyContact(),
+		"created_date": user.getCreatedDate(),
+		"created_user": user.getCreatedUserID(),
+		"country": user.getCountry(),
+		"date_expiration": user.getExpirationDate(),
+		"email": user.getEmail(),
+		"email_preference": user.getEmailPreferenceID(),
+		"emailPref": user.getEmailPreference(),
+		"fax": user.getFax(),
+		"first_name": user.getFirstName(),
+		"first_practice": user.getFirstPractice(),
+		"intro_pass": user.getUsedIntroPass(),
+		"last_name": user.getLastName(),
+		"mailingListYN": user.getIsOnMailingList(),
+		"medical_conditions": user.getMedicalConditions(),
+		"middle_name": user.getMiddleName(),
+		"officer": user.getOffices(),
+		"permissions": user.getPermissions(),
+		"phone_cell": user.getCellPhone(),
+		"phone_day": user.getPhoneDay(),
+		"phone_emergency": user.getEmergencyPhone(),
+		"phone_night": user.getPhoneNight(),
+		"picture": user.getPicture(),
+		"picture_height": user.getPictureHeight(),
+		"picture_width": user.getPictureWidth(),
+		"postingPref": user.getPostingPreference(),
+		"posting_preference": user.getPostingPreferenceID(),
+		"preferred_name": user.getPreferredName(),
+		"profile_visible": user.getIsProfileVisible(),
+		"state_id": user.getStateID(),
+		"status": user.getUserStatusID(),
+		"statusType": user.getUserStatus(),
+		"tempPassword": user.getIsPasswordTemporary(),
+		"username": user.getUserName(),
+		"user_id": user.getUserID(),
+		"usms_number": user.getUSMSNumber(),
+		"usms_year": user.getUSMSYear(),
+		"zip": user.getZip()
+	} />
+
+	<cfset request.squid = structCopy(session.squid) />
+</cfif>
 
 <cfif NOT variables.success>
 	<cflocation addtoken="No" url="#Request.self#?fuseaction=#XFA.failure#&username=#attributes.username#&returnFA=#attributes.returnFA#&success=#variables.success#&reason=#variables.reason#">
 </cfif>
-
-<!--- If they're successful, get User info --->
-<cfinvoke
-	component="#Request.login_cfc#"
-	method="getUser"
-	returnvariable="strUser"
-	user=#strUser#
-	dsn=#Request.DSN#
-	usersTbl=#Request.usersTbl#
-	developerTbl=#Request.developerTbl#
-	testerTbl=#Request.testerTbl#
-	preferenceTbl=#Request.preferenceTbl#
-	objectsTbl=#Request.objectsTbl#
-	officerTbl=#Request.officerTbl#
-	officer_typeTbl=#Request.officer_typeTbl#
-	officer_permissionTbl=#Request.officer_permissionTbl#
-	user_statusTbl=#Request.user_statusTbl#
->
-
-<!--- See if they are a member --->
-<cfif strUser.statusType NEQ "Member">
-	<cflocation addtoken="No" url="#Request.self#?fuseaction=#XFA.expired#&reason=Guest&first_name=#strUser.preferred_name#&user_id=#strUser.user_id#&username=#strUser.username#&created_date=#strUser.created_date#&created_user=#strUser.created_user#">
-</cfif>
-
-<!--- See if their membership has expired --->
-<cfif DateCompare(strUser.date_expiration,Now()) LT 0>
-	<cflocation addtoken="No" url="#Request.self#?fuseaction=#XFA.expired#&reason=Expired&date_expiration=#DateFormat(strUser.date_expiration,"MMMM D, YYYY")#&first_name=#strUser.preferred_name#&user_id=#strUser.user_id#&username=#strUser.username#&created_date=#strUser.created_date#&created_user=#strUser.created_user#">
-</cfif>
-
-<!--- Clear out session --->
-<cfset tmp = StructClear(Session.squid)>
-
-<!--- Set new session --->
-<cflock scope="SESSION" timeout="30" type="EXCLUSIVE">
-	<cfset Session.squid = strUser>
-	<cfset Request.squid = StructCopy(Session.squid)>
-</cflock>
 
 <!--- See if the password is temporary --->
 <cfscript>

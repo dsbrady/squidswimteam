@@ -62,7 +62,7 @@
 		Thank you for your interest in SQUID, Denver’s premier and primarily LGBT-friendly Swim Team!
 	</p>
 	<p>
-		Since we practice at facilities operated by Denver Parks & Recreation, we require every participant to provide emergency contact information and sign the Liability 
+		Since we practice at facilities operated by Denver Parks & Recreation, we require every participant to provide emergency contact information and sign the Liability
 		statement below. Please fill out the rest of the form so we can understand your interests and how you heard about the team.
 	</p>
 	<p>
@@ -93,7 +93,7 @@
 	<fieldset>
 		<legend>Buy Swims</legend>
 		<div class="duesContainer">
-			<cfmodule template="/lib/buySwims.cfm" numSwims="#attributes.numSwims#" displayZeroSwims=true>
+			<cfmodule template="#request.siteRoot#lib/buySwims.cfm" numSwims="#attributes.numSwims#" displayZeroSwims=true>
 		</div>
 	</fieldset>
 	<fieldset>
@@ -245,7 +245,7 @@
 
 		<div class="contactContainer">
 			<div class="mailingListInput">
-				<input type="checkbox" name="mailingList" id="mailingList" value="true" <cfif attributes.mailingList>checked="true"</cfif> /> 
+				<input type="checkbox" name="mailingList" id="mailingList" value="true" <cfif attributes.mailingList>checked="true"</cfif> />
 			</div>
 			<div class="mailingListLabel">
 				<label for="mailingList">
@@ -292,7 +292,7 @@
 <!--- 1/9/2013: removing this, but only commenting it out in case they change their minds
 	<fieldset>
 		<legend>Visitor Information</legend>
-		
+
 		<div class="visitorContainer">
 			Are you visiting from another USMS and/or GLBT swim team?
 			<br />
@@ -322,10 +322,10 @@
 	<fieldset>
 		<legend>Liability Waiver</legend>
 		<div class="liabilityContainer">
-			I, the undersigned participant, intending to be legally bound, hereby certify that I am physically fit and have not been otherwise informed by a physician. 
-			I ackowledge that I am aware of all the risks inherent in Masters swimming (training and competition), including possible permanent disability or death, 
-			and agree to assume all of those risks. As a condition of my participation in the Masters Swimming Program or any activities hereto, I hereby waive any 
-			and all rights to claims for loss or damages, including all claims for loss or damages caused by the negligence, active or passive, of Colorado 
+			I, the undersigned participant, intending to be legally bound, hereby certify that I am physically fit and have not been otherwise informed by a physician.
+			I ackowledge that I am aware of all the risks inherent in Masters swimming (training and competition), including possible permanent disability or death,
+			and agree to assume all of those risks. As a condition of my participation in the Masters Swimming Program or any activities hereto, I hereby waive any
+			and all rights to claims for loss or damages, including all claims for loss or damages caused by the negligence, active or passive, of Colorado
 			SQUID Swim Team, or any individuals supervising such activities.
 		</div>
 		<div class="liabilityContainer">
@@ -341,5 +341,5 @@
 		<button type="submit" id="nextStepButton" name="nextStepButton" value="Next Step">Next Step</button>
 	</div>
 </form>
-<cfinclude template="/lib/additionalFees.cfm" />
+<cfinclude template="#request.siteRoot#lib/additionalFees.cfm" />
 </cfoutput>

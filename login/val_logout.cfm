@@ -15,7 +15,7 @@
 			<structure name="XFA">
 				<string name="success" />
 			</structure>
-			
+
 			<string name="returnFA" scope="attributes" />
 
 		</in>
@@ -33,9 +33,7 @@
 <cfparam name="variables.reason" default="" type="string">
 <cfparam name="attributes.returnFA" default="home.start" type="string">
 
-<cfinvoke  
-	component="#Request.login_cfc#" 
-	method="logout" 
-	structKey="squid"
->
-
+<cfset session.squid = {
+	"user_id": 0,
+	"user": new squid.User(application.dsn, 0)
+} />

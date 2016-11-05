@@ -59,306 +59,6 @@
 		<cfreturn var.success>
 	</cffunction>
 
-	<cffunction name="buySwims" access="public" displayname="buySwims" hint="Buys Swims" output="No" returntype="struct">
-		<cfargument name="dsn" required="no" type="string" default="squid">
-		<cfargument name="transactionTbl" required="yes" type="string">
-		<cfargument name="transaction_type_id" required="yes" type="numeric">
-		<cfargument name="member_id" required="yes" type="numeric">
-		<cfargument name="numSwims" required="yes" type="numeric">
-		<cfargument name="updating_user" required="yes" type="numeric">
-
-		<cfscript>
-			var success = StructNew();
-			success.success = "Yes";
-			success.reason = "";
-		</cfscript>
-
-		<!--- Insert into database and get transaction_id --->
-		<cftransaction isolation="SERIALIZABLE">
-			<cfquery name="qInsert" datasource="#dsn#">
-				SET NOCOUNT ON;
-				INSERT INTO
-					#arguments.transactionTbl#
-				(
-					member_id,
-					num_swims,
-					practice_id,
-					transaction_type_id,
-					date_transaction,
-					paymentConfirmed,
-					notes,
-					created_user,
-					modified_user
-				)
-				VALUES
-				(
-					<cfqueryparam value="#VAL(member_id)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#VAL(numSwims)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="0" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#VAL(transaction_type_id)#" cfsqltype="CF_SQL_INTEGER">,
-					GetDate(),
-					<cfqueryparam value="0" cfsqltype="CF_SQL_BIT">,
-					<cfqueryparam value="Paypal Pending" cfsqltype="CF_SQL_VARCHAR">,
-					<cfqueryparam value="#VAL(updating_user)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#VAL(updating_user)#" cfsqltype="CF_SQL_INTEGER">
-				);
-				SET NOCOUNT OFF;
-				SELECT ident_current('#arguments.transactionTbl#') AS newID
-			</cfquery>
-
-			<cfset success.transaction_id = qInsert.newID />
-		</cftransaction>
-
-		<cfreturn success />
-	</cffunction>
-
-	<cffunction name="buySwimsConfirm" access="public" displayname="buySwimsConfirm" hint="Confirms Paypal Purchase of Swims" output="No" returntype="void">
-		<cfargument name="dsn" required="no" type="string" default="squid">
-		<cfargument name="transactionTbl" required="yes" type="string">
-		<cfargument name="updating_user" required="yes" type="numeric" />
-		<cfargument name="notes" required="yes" type="string" />
-		<cfargument name="userID" required="yes" type="numeric" />
-		<cfargument name="squidTransactionID" required="yes" type="numeric" />
-
-		<!--- Update database --->
-		<cftransaction>
-			<cfquery name="qUpdate" datasource="#dsn#">
-				UPDATE
-					#transactionTbl#
-				SET
-					member_id = <cfqueryparam value="#VAL(arguments.userID)#" cfsqltype="CF_SQL_INTEGER">,
-					paymentconfirmed = <cfqueryparam value="1" cfsqltype="CF_SQL_BIT">,
-					notes = <cfqueryparam value="#arguments.notes#" cfsqltype="CF_SQL_VARCHAR">,
-					modified_date = GetDate(),
-					modified_user = <cfqueryparam value="#VAL(arguments.updating_user)#" cfsqltype="CF_SQL_INTEGER">
-				WHERE
-					transaction_id = <cfqueryparam value="#VAL(arguments.squidTransactionID)#" cfsqltype="CF_SQL_INTEGER">
-			</cfquery>
-
-<!--- 1/8/2013: no longer used
-			<!--- See if this was a swim pass purchase -- if so, activate the swim pass --->
-			<cfquery name="qTransaction" datasource="#arguments.dsn#">
-				SELECT
-					usersSwimPassID
-				FROM
-					#arguments.transactionTbl#
-				WHERE
-					transaction_id = <cfqueryparam value="#VAL(arguments.paypal.item_number)#" cfsqltype="CF_SQL_INTEGER" />
-			</cfquery>
-
-			<cfif val(qTransaction.usersSwimPassID) GT 0>
-				<cfquery name="qUpdateSwimPass" datasource="#arguments.dsn#">
-					UPDATE
-						usersSwimPasses
-					SET
-						active = 1
-					WHERE
-						usersSwimPassID = <cfqueryparam value="#VAL(qTransaction.usersSwimPassID)#" cfsqltype="CF_SQL_INTEGER" />
-				</cfquery>
-			</cfif>
---->
-		</cftransaction>
-
-		<cfreturn />
-	</cffunction>
-
-	<cffunction name="activateSwimPass" access="public" output="false" returntype="void">
-		<cfargument name="dsn" required="true" type="string" />
-		<cfargument name="usersSwimPassID" required="true" type="numeric" />
-		<cfargument name="updatingUserID" required="true" type="numeric" />
-
-		<cfquery name="qUpdateSwimPass" datasource="#arguments.dsn#">
-			UPDATE
-				usersSwimPasses
-			SET
-				modified = getdate(),
-				modifiedBy = <cfqueryparam value="#arguments.updatingUserID#" cfsqltype="CF_SQL_INTEGER" />,
-				active = 1
-			WHERE
-				usersSwimPassID = <cfqueryparam value="#arguments.usersSwimPassID#" cfsqltype="CF_SQL_INTEGER" />
-		</cfquery>
-
-		<cfreturn />
-	</cffunction>
-
-	<cffunction name="buySwimsEmail" access="public" displayname="buySwimsEmail" hint="Generates e-mail content after buying swims" output="No" returntype="struct">
-		<cfargument name="dsn" required="no" type="string" default="squid">
-		<cfargument name="practice_transactionTbl" required="yes" type="string">
-		<cfargument name="usersTbl" required="yes" type="string">
-		<cfargument name="qTrans" required="yes" type="query">
-		<cfargument name="stPayPal" required="yes" type="struct">
-
-		<cfset var genContent = StructNew() />
-		<cfset var sameContent = "" />
-		<cfset genContent.subject = "SQUID Swims Purchase" />
-
-		<cfscript>
-sameContent = "
-Name:	#qTrans.memberpref# #qTrans.memberlast#
-Swims:	#qTrans.num_swims#
-Cost:	#DollarFormat(VAL(arguments.stPayPal.amt))#
-PayPal Transaction ID:	#arguments.stPayPal.transactionID#
-";
-
-genContent.userMail = "
-#qTrans.memberpref#,
-
-#wrap("You have successfully purchased " & VAL(qTrans.num_swims) & " swims via PayPal.  The details of your transaction are below.",60)#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-#sameContent#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-If you have any questions, please contact us at <squid@squidswimteam.org>.
-";
-
-genContent.squidMail = "
-#wrap("#qTrans.memberpref# #qTrans.memberlast# has purchased " & VAL(qTrans.num_swims) & " swims via PayPal.  The details of the transaction are below.",60)#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-#sameContent#
-";
-		</cfscript>
-
-		<cfreturn genContent />
-	</cffunction>
-
-	<cffunction name="buySwimPass" access="public" hint="Buys Swim Pass" output="No" returntype="struct">
-		<cfargument name="dsn" required="no" type="string" default="squid">
-		<cfargument name="transactionTbl" required="yes" type="string">
-		<cfargument name="transaction_type_id" required="yes" type="numeric">
-		<cfargument name="member_id" required="yes" type="numeric">
-		<cfargument name="numSwims" required="yes" type="numeric">
-		<cfargument name="updating_user" required="yes" type="numeric">
-		<cfargument name="currentBalance" required="yes" type="numeric" />
-		<cfargument name="swimPassID" required="yes" type="numeric" />
-		<cfargument name="cfcLookup" required="yes" type="lookup_queries" />
-		<cfargument name="effectiveDate" required="yes" type="string" />
-
-		<cfset var local = structNew() />
-		<cfset local.stSuccess = structNew() />
-		<cfset local.stSuccess.success = true />
-		<cfset local.stSuccess.reason = "" />
-
-		<!--- Get the swim pass info --->
-		<cfset local.qSwimPass = arguments.cfcLookup.getSwimPasses(arguments.dsn,val(arguments.swimPassID)) />
-		<cfset local.qCurrentPass = cfcLookup.getActiveUsersSwimPassesByUserIDAndDate(arguments.dsn,arguments.member_id,arguments.effectiveDate) />
-		<cfset local.currentActiveDate = local.qCurrentPass.activeDate />
-		<cfset local.currentExpirationDate = local.qCurrentPass.expirationDate />
-		<cfif isDate(arguments.effectiveDate)>
-			<cfset local.activeDate = arguments.effectiveDate />
-		<cfelseif NOT isDate(local.currentExpirationDate) OR (isDate(local.currentExpirationDate) AND dateCompare(local.currentExpirationDate,now()) LT 1)>
-			<cfset local.activeDate = now() />
-		<cfelse>
-			<cfset local.activeDate = dateAdd("d",1,local.currentExpirationDate) />
-		</cfif>
-		<cfset local.expirationDate = dateAdd(local.qSwimPass.expirationUnitAbbreviation,local.qSwimPass.expirationNumber,dateAdd("d",-1,local.activeDate)) />
-
-		<!--- Insert into database and get transaction_id --->
-		<cftransaction isolation="SERIALIZABLE">
-			<cfquery name="qInsert" datasource="#dsn#">
-				SET NOCOUNT ON;
-				INSERT INTO
-					usersSwimPasses
-				(
-					userID,
-					swimPassID,
-					activeDate,
-					expirationDate,
-					createdBy,
-					modifiedBy,
-					active,
-					isStudent,
-					dateStudentAgreed
-				)
-				VALUES
-				(
-					<cfqueryparam value="#VAL(arguments.member_id)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#VAL(arguments.swimPassID)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#local.activeDate#" cfsqltype="CF_SQL_TIMESTAMP">,
-					<cfqueryparam value="#local.expirationDate#" cfsqltype="CF_SQL_TIMESTAMP">,
-					<cfqueryparam value="#VAL(updating_user)#" cfsqltype="CF_SQL_INTEGER">,
-					<cfqueryparam value="#VAL(updating_user)#" cfsqltype="CF_SQL_INTEGER">,
-					0,
-				<cfif local.qSwimPass.swimPass CONTAINS "Student">
-					1,
-					getDate()
-				<cfelse>
-					0,
-					NULL
-				</cfif>
-				);
-				SET NOCOUNT OFF;
-				SELECT ident_current('usersSwimPasses') AS newID;
-			</cfquery>
-			<cfset local.usersSwimPassID = qInsert.newID />
-		</cftransaction>
-
-		<cfset local.stSuccess = buySwims(arguments.dsn,arguments.transactionTbl,arguments.transaction_type_id,arguments.member_id,arguments.numSwims,arguments.updating_user) />
-
-		<cftransaction isolation="SERIALIZABLE">
-			<!--- Update the practice transaction with the swim pass ID --->
-			<cfquery name="local.qUpdate" datasource="#arguments.dsn#">
-				UPDATE
-					#arguments.transactionTbl#
-				SET
-					usersSwimPassID = <cfqueryparam value="#local.usersSwimPassID#" cfsqltype="cf_sql_integer" />
-				WHERE
-					transaction_id = <cfqueryparam value="#local.stSuccess.transaction_id#" cfsqltype="cf_sql_integer" />
-			</cfquery>
-
-		<cfset local.stSuccess.usersSwimPassID = local.usersSwimPassID />
-
-		<cfreturn local.stSuccess />
-	</cffunction>
-
-	<cffunction name="buySwimPassEmail" access="public" hint="Generates e-mail content after buying a swim pass" output="false" returntype="struct">
-		<cfargument name="dsn" required="no" type="string" default="squid">
-		<cfargument name="practice_transactionTbl" required="yes" type="string">
-		<cfargument name="usersTbl" required="yes" type="string">
-		<cfargument name="qTrans" required="yes" type="query">
-		<cfargument name="paypal" required="yes" type="struct">
-
-		<cfset var genContent = StructNew() />
-		<cfset var sameContent = "" />
-		<cfset genContent.subject = "SQUID Swim Pass Purchase" />
-
-		<cfset lookupCFC = createObject("component","lookup_queries") />
-		<cfset qSwimPass = lookupCFC.getUsersSwimPassesByID(arguments.dsn,arguments.qTrans.usersSwimPassID) />
-		<cfscript>
-sameContent = "
-Name:	#qTrans.memberpref# #qTrans.memberlast#
-Swim Pass:	#qSwimPass.swimPass#
-Expiration:	#dateFormat(qSwimPass.expirationDate,"m/d/yyyy")#
-Cost:	#DollarFormat(VAL(URLDecode(paypal.payment_gross)))#
-PayPal Transaction ID:	#ListLast(qTrans.notes," ")#
-";
-
-genContent.userMail = "
-#qTrans.memberpref#,
-
-#wrap("You have successfully purchased a " & qSwimPass.swimPass & " pass via PayPal.  The details of your transaction are below.",60)#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-#sameContent#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-If you have any questions, please contact us at <squid@squidswimteam.org>.
-";
-
-genContent.squidMail = "
-#wrap("#qTrans.memberpref# #qTrans.memberlast# has purchased a " & qSwimPass.swimPass & " pass via PayPal.  The details of the transaction are below.",60)#
-#chr(10)##chr(13)#
-#chr(10)##chr(13)#
-#sameContent#
-PayPal Fee:	#paypal.payment_fee#
-Net Amount:	#DollarFormat(VAL(URLDecode(paypal.payment_gross)) - VAL(URLDecode(paypal.payment_fee)))#
-";
-		</cfscript>
-
-		<cfreturn genContent />
-	</cffunction>
-
 	<cffunction name="payDues" access="public" displayname="payDues" hint="Pays Dues" output="No" returntype="struct">
 		<cfargument name="dsn" required="no" type="string" default="squid" />
 		<cfargument name="transactionTbl" required="yes" type="string" />
@@ -1041,7 +741,7 @@ genContent.squidMail = "
 
 		<cfset var local = structNew() />
 		<cfset local.isOfficer = false />
-		
+
 		<cfloop from="1" to="#arrayLen(arguments.aOfficer)#" index="local.i">
 			<cfif arguments.aOfficer[local.i].officer_type EQ arguments.officer>
 				<cfset local.isOfficer = true />
@@ -1058,7 +758,7 @@ genContent.squidMail = "
 		<cfargument name="lastName" required="yes" type="string" />
 
 		<cfset var isValid = true />
-	
+
 		<!--- Make sure the first and last characters of the signature match the first characters of the first and last names --->
 		<cfif len(trim(arguments.signature)) EQ 0 OR len(trim(arguments.firstName)) EQ 0 OR len(trim(arguments.lastName)) EQ 0>
 			<cfset isValid = false />
@@ -1080,7 +780,7 @@ genContent.squidMail = "
 
 		<cfquery name="local.qInsert" datasource="#arguments.dsn#">
 			SET NOCOUNT ON;
-			
+
 			INSERT INTO memberApplications
 			(
 				email,
@@ -1131,12 +831,12 @@ genContent.squidMail = "
 				<cfqueryparam value="#arguments.formfields.liabilitySignatureDate#" cfsqltype="cf_sql_date" />,
 				0
 			);
-			
+
 			SET NOCOUNT OFF;
-			
+
 			SELECT scope_identity() AS memberApplicationID;
 		</cfquery>
-		
+
 		<cfset local.stResults.memberApplicationID = local.qInsert.memberApplicationID />
 
 		<cfreturn local.stResults />
@@ -1155,7 +855,7 @@ genContent.squidMail = "
 
 		<cfquery name="local.qInsert" datasource="#arguments.dsn#">
 			SET NOCOUNT ON;
-			
+
 			INSERT INTO membershipTransactions
 			(
 				member_id,
@@ -1178,12 +878,12 @@ genContent.squidMail = "
 				0,
 				0
 			);
-			
+
 			SET NOCOUNT OFF;
-			
+
 			SELECT scope_identity() AS membershipTransactionID;
 		</cfquery>
-		
+
 		<cfset local.membershipTransactionID = local.qInsert.membershipTransactionID />
 
 		<cfreturn local.membershipTransactionID />
@@ -1203,12 +903,12 @@ genContent.squidMail = "
 
 		<!--- Get password salt --->
 		<cfset local.salt = RandRange(1000,9999) />
-		
+
 		<!--- Set up phone data --->
 		<cfset local.phone_cell = "" />
 		<cfset local.phone_day = "" />
 		<cfset local.phone_night = "" />
-		
+
 		<cfset local.expirationDate = CreateDateTime(VAL(arguments.stDues.membershipYear[arguments.stDues.duesIndex]),12,31,23,59,59) />
 
 		<cfswitch expression="#arguments.formfields.phoneType1#">
@@ -1289,9 +989,9 @@ genContent.squidMail = "
 					0,
 					<cfqueryparam value="#local.qStatus.user_status_id#" cfsqltype="CF_SQL_INTEGER" />
 				);
-				
+
 				SET NOCOUNT OFF;
-				
+
 				SELECT scope_identity() AS newUserID;
 			</cfquery>
 		</cftransaction>
@@ -1313,7 +1013,7 @@ genContent.squidMail = "
 		<cfargument name="practiceTransactionID" required="yes" type="numeric" />
 
 		<cfset var local = structNew() />
-		
+
 		<cfquery name="local.deleteUser" datasource="#arguments.dsn#">
 			DELETE FROM users
 			WHERE user_id = <cfqueryparam value="#arguments.userID#" cfsqltype="cf_sql_integer" />
