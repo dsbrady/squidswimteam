@@ -2,7 +2,7 @@ component accessors = "true" extends="Base" {
 
 	property name = "address1" type = "string" default = "";
 	property name = "address2" type = "string" default = "";
-	property name = "birthday" type = "date" default = "";
+	property name = "birthday" type = "string" default = "";
 	property name = "calendarPreference" type = "string" default = "";
 	property name = "calendarPreferenceID" type = "numeric" default = 6;
 	property name = "cellPhone" type = "string" default = "";
@@ -127,7 +127,7 @@ component accessors = "true" extends="Base" {
 
 			setAddress1(local.userInfo.address1);
 			setAddress2(local.userInfo.address2);
-			setBirthday(local.userInfo.birthday);
+			setBirthday(isValid("date", local.userInfo.birthday) ? local.userInfo.birthday : "");
 			setCalendarPreference(local.userInfo.calendarPref);
 			setCalendarPreferenceID(local.userInfo.calendar_preference);
 			setCellPhone(local.userInfo.phone_cell);
