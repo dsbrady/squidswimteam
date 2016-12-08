@@ -79,9 +79,21 @@
 		</cfif>
 		<cfset request.totalAmountDue += request.swimsCost />
 		<cfset request.practiceTransactionType = "Swim Purchase" />
-		<cfset request.qTransaction = request.lookupCFC.getTransactionTypes(Request.dsn,Request.transaction_typeTbl,0,false,request.practiceTransactionType) />
-		<!--- Enter into the practiceTransaction table --->
-		<cfset request.practiceTransactionID = request.membersCFC.buySwims(request.dsn,Request.practice_transactionTbl,request.qTransaction.transaction_type_id,request.newUserID,request.totalSwims,request.newUserID).transaction_id />
+		<!--- Get the transaction type --->
+		<cfset practiceTransactionType = new squid.transactions.TransactionType(request.dsn).getByTransactionType(request.practiceTransactionType) />
+
+		<!--- Insert the practice transaction as an unconfirmed transaction (we need the transaction ID to pass in to PayPal) --->
+		<cfset practiceTransaction = new squid.transactions.PracticeTransaction(request.dsn) />
+
+		<cfset practiceTransaction.insertTransaction(
+			memberID = request.newUserID,
+			swims = request.totalSwims,
+			transactionType = practiceTransactionType,
+			notes = "PayPal Pending",
+			userID = request.newUserID
+		) />
+
+		<cfset request.practiceTransactionID = practiceTransaction.getTransactionID() />
 		<cfset request.paypalDescription &= " & Swim Purchase" />
 	<cfelse>
 		<cfset request.totalSwims = 0 />
@@ -124,7 +136,11 @@
 	<cfset request.membersCFC.payDuesConfirm(Request.dsn,Request.usersTbl,Request.user_statusTbl,request.lookupCFC,request.newUserID,session.squid.stDues.membershipYear[session.squid.stDues.duesIndex],"PayPal Transaction ###request.stSuccess.stPaypalResults.transactionID#",request.stPaypal.invNumber) />
 
 	<cfif val(request.practiceTransactionID) GT 0>
-		<cfset request.membersCFC.buySwimsConfirm(Request.dsn,Request.practice_transactionTbl,request.newUserID,"PayPal Transaction ###request.stSuccess.stPaypalResults.transactionID#",request.newUserID,request.practiceTransactionID) />
+		<cfset practiceTransaction.setIsConfirmed(true) />
+		<cfset practiceTransaction.setNotes("PayPal Transaction ###request.stSuccess.stPaypalResults.transactionID#") />
+		<cfset practiceTransaction.setModifiedUserID(request.newUserID) />
+		<cfset practiceTransaction.setModifiedDate(now()) />
+		<cfset practiceTransaction.save() />
 	</cfif>
 
 	<!--- Set up e-mail content --->

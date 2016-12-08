@@ -16,7 +16,7 @@ component accessors = "true" extends="Base" {
 		local.userQuery.addParam(name = "email", value = arguments.email, cfsqltype = "cf_sql_varchar");
 		local.userInfo = local.userQuery.execute().getResult();
 
-		local.user = new User(getDSN(), local.userInfo.user_id);
+		local.user = new User(getDSN(), isValid("integer", local.userInfo.user_id) ? local.userInfo.user_id : 0 );
 
 		return local.user;
 	}
