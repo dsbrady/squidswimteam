@@ -61,7 +61,7 @@
 	</cfif>
 
 	<cfif len(attributes.billingCountry) EQ 0>
-		<cfset getResponse().setFieldError("billingCountry", "SElect the billing country.") />
+		<cfset getResponse().setFieldError("billingCountry", "Select the billing country.") />
 	</cfif>
 
 	<cfif NOT getResponse().hasFieldErrors()>
@@ -71,18 +71,25 @@
 		<cfif getUser().getUserID() EQ 0>
 			<cfset request.isMember = false />
 			<cfset user = new squid.Users(request.dsn).getByEmailAddress(attributes.email) />
-			<cfset request.isMember = variables.user.getUserStatus() IS "Member" />
+			<!--- If they weren't found, we need to send an error message back --->
+			<cfif user.getUserID() EQ 0>
+				<cfset getResponse().setFieldError("email", "The email address you entered was not found in our system. Please <a href='#request.self#?fuseaction=#xfa.contact#&sender_email=#attributes.email#&officer_type_id=2'>contact us</a> for assistance.") />
+			<cfelse>
+				<cfset request.isMember = variables.user.getUserStatus() IS "Member" />
+			</cfif>
 		<cfelse>
 			<cfset request.isMember = true />
 		</cfif>
 
-		<!--- Calculate the number of free swims --->
-		<cfset request.freeSwims = 0 />
-		<cfif request.isMember>
-			<cfset request.freeSwims = calculateFreeSwims(attributes.numSwims, request.purchasedSwimsPerFreeSwim) />
-		</cfif>
+		<cfif NOT getResponse().hasFieldErrors()>
+			<!--- Calculate the number of free swims --->
+			<cfset request.freeSwims = 0 />
+			<cfif request.isMember>
+				<cfset request.freeSwims = calculateFreeSwims(attributes.numSwims, request.purchasedSwimsPerFreeSwim) />
+			</cfif>
 
-		<cfset request.totalSwims = attributes.numSwims + request.freeSwims />
-		<cfset request.totalCost = attributes.numSwims * (request.isMember ? request.pricePerSwimMembers : request.pricePerSwimNonmembers) />
+			<cfset request.totalSwims = attributes.numSwims + request.freeSwims />
+			<cfset request.totalCost = attributes.numSwims * (request.isMember ? request.pricePerSwimMembers : request.pricePerSwimNonmembers) />
+		</cfif>
 	</cfif>
 </cfsilent>
