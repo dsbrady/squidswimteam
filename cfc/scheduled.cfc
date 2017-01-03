@@ -23,31 +23,31 @@
 				u.last_name,
 				u.preferred_name,
 				u.email,
-				u.date_expiration
+				u.date_expiration,
+				CASE WHEN us.unsubscribeID IS NULL THEN 1 ELSE 0 END AS isSubscribed
 			FROM
-				#arguments.usersTbl# u,
-				#arguments.user_statusTbl# s
+				users u
+				INNER JOIN userStatuses s ON u.user_status_id = s.user_status_id
+					AND UPPER(s.status) = 'MEMBER'
+				LEFT JOIN unsubscribes us ON
+					(
+						u.user_id = us.userID
+						OR u.email = us.email
+					)
+					AND us.resubscribeDate IS NULL
 			WHERE
-				u.user_status_id = s.user_status_id
-				AND UPPER(s.status) = 'MEMBER'
-				AND u.date_expiration < GetDate()
-				AND u.active_code = 1
-				AND NOT EXISTS
 				(
-					SELECT
-						us.userID
-					FROM
-						unsubscribes us
-					WHERE
-						(
-							u.user_id = us.userID
-							OR u.email = us.email
-						)
-						AND us.resubscribeDate IS NULL
+					u.date_expiration < GetDate()
+					OR u.date_expiration = '2999-12-31 23:59:59'
 				)
+				AND u.active_code = 1
+			ORDER BY u.user_id
 		</cfquery>
 
+
 		<cfif qryExpired.RecordCount GT 0>
+			<cfset local.membersCFC = new cfc.members() />
+
 			<!--- Get new status type --->
 			<cfinvoke
 				component="#arguments.lookup_cfc#"
@@ -73,12 +73,12 @@
 					)
 			</cfquery>
 
-
 			<!--- send e-mail to users --->
 			<cfloop query="qryExpired">
-				<!--- Get unsubscribe content --->
-				<cfset unsubscribeContent = membersCFC.getUnsubscribeContent(arguments.dsn,qryExpired.user_id,arguments.unsubscribeURL,arguments.encryptionKey,arguments.encryptionAlgorithm,arguments.encryptionEncoding) />
-				<cfif LEN(TRIM(qryExpired.email)) GT 0>
+				<cfif qryExpired.isSubscribed>
+					<!--- Get unsubscribe content --->
+					<cfset unsubscribeContent = local.membersCFC.getUnsubscribeContent(arguments.dsn,qryExpired.user_id,arguments.unsubscribeURL,arguments.encryptionKey,arguments.encryptionAlgorithm,arguments.encryptionEncoding) />
+					<cfif LEN(TRIM(qryExpired.email)) GT 0>
 <cfmail from="#arguments.from_email#" to="#qryExpired.email#" subject="SQUID Membership Expired" server="mail.squidswimteam.org">
 #qryExpired.preferred_name#,
 
@@ -88,6 +88,7 @@
 
 #wrap(unsubscribeContent.text,72)#
 </cfmail>
+					</cfif>
 				</cfif>
 			</cfloop>
 		</cfif>
