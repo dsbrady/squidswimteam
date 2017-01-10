@@ -15,7 +15,7 @@
 			<structure name="XFA">
 				<string name="next" />
 			</structure>
-			
+
 		</in>
 		<out>
 		</out>
@@ -25,7 +25,7 @@
 --->
 <cfsilent>
 	<cfparam name="attributes.transaction_id" default="0" type="numeric" />
-	
+
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
@@ -75,7 +75,7 @@
 		</tr>
 		<tr valign="top">
 			<td colspan="2">
-				#qTrans.preferred_name#, you have successfully paid your SQUID dues through <strong>#Year(qTrans.date_expiration)#</strong>.  
+				#qTrans.preferred_name#, you have successfully paid your SQUID dues through <strong>#Year(qTrans.date_expiration)#</strong>.
 				The details of your transaction are below.
 			</td>
 		</tr>

@@ -45,7 +45,7 @@ emailServer=mail.squidswimteam.org
 emailUserName=squid@squidswimteam.org
 emailPassword=squid*swim
 emailFromAddress=squid@squidswimteam.org
-emailToAddress=dsbrady@scottbrady.net
+emailToAddress=squid@squidswimteam.org
 emailSubject=SQUID Spam Attempt Blocked
 
 #logging

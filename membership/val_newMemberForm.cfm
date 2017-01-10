@@ -53,7 +53,7 @@
 	<cfset request.stSuccess.aErrors = arrayNew(1) />
 
 	<!--- Validate Info --->
-	<cfif len(trim(attributes.email)) EQ 0 OR NOT request.profileCFC.isValidEmail(attributes.email)>
+	<cfif len(trim(attributes.email)) EQ 0 OR NOT isValid("email", attributes.email)>
 		<cfset request.stSuccess.isSuccessful = false />
 		<cfset arrayAppend(request.stSuccess.aErrors,"Please enter a valid e-mail address.") />
 	<cfelseif request.profileCFC.emailAddressExists(request.dsn,attributes.email)>

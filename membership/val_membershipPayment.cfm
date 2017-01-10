@@ -72,14 +72,14 @@
 		<cfif NOT len(attributes.preferred_name)>
 			<cfset attributes.preferred_name = attributes.first_name />
 		</cfif>
-		<cfset stMember.user_id = membersCFC.addUser(attributes,Request.usersTbl,Request.user_statusTbl,lookupCFC,Request.DSN) />
+		<cfset stMember.user_id = request.membersCFC.addUser(attributes,Request.usersTbl,Request.user_statusTbl,request.lookupCFC,Request.DSN) />
 	</cfif>
 	<cfset stMember = request.loginCFC.getUserInfo(stMember,Request.usersTbl,Request.preferenceTbl,Request.developerTbl,Request.testerTbl,Request.user_statusTbl,Request.DSN) />
+	<cfset attributes.user_id = stMember.user_id />
 </cfif>
 
-
 <!--- Update database --->
-<cfset request.stSuccess = request.membersCFC.payDues(Request.dsn,Request.membershipTransactionTbl,attributes,Request.squid.user_id,session.squid.stDues) />
+<cfset request.stSuccess = request.membersCFC.payDues(Request.dsn,Request.membershipTransactionTbl,attributes,stMember.user_id,session.squid.stDues) />
 
 <cfset request.stPaypal = structNew() />
 <cfset request.stPaypal.paymentAction = "Sale" />

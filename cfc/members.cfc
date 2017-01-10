@@ -220,11 +220,6 @@ genContent.squidMail = "
 		<cfargument name="lookupCFC" required="yes" type="lookup_queries" />
 		<cfargument name="dsn" required="no" type="string" default="squid" />
 
-<!--- (11/30/2012) This is no longer used
-		<!--- Get username --->
-		<cfset username = getUsername(dsn,userTbl,formfields.preferred_name,formfields.last_name) />
---->
-
 		<!--- Get password --->
 		<cfset stPassword = getPassword() />
 

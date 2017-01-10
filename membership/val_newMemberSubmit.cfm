@@ -155,7 +155,7 @@
 	</cfif>
 
 	<!--- Send e-mail to squid --->
-	<cfmail from="#Request.from_email#" to="dsbrady@scottbrady.net,treasurer@squidswimteam.org" subject="SQUID Membership Sign-Up (#session.squid.stDues.membershipYear[session.squid.stDues.duesIndex]#) - #qMember.preferred_name# #qMember.last_name#" server="mail.squidswimteam.org">
+	<cfmail from="#Request.from_email#" to="dsbrady@protonmail.com,treasurer@squidswimteam.org" subject="SQUID Membership Sign-Up (#session.squid.stDues.membershipYear[session.squid.stDues.duesIndex]#) - #qMember.preferred_name# #qMember.last_name#" server="mail.squidswimteam.org">
 	#stEmail.squidMail#
 	</cfmail>
 
