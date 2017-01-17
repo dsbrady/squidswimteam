@@ -4,7 +4,7 @@
 		<cfset getResponse().setFieldError("email", "Enter a valid email address.") />
 	</cfif>
 
-	<cfif NOT isValid("integer", attributes.numSwims) OR attributes.numSwims LT 10 OR attributes.numSwims GT 100>
+	<cfif NOT isValid("integer", attributes.numSwims) OR attributes.numSwims LT 1 OR attributes.numSwims GT 100>
 		<cfset getResponse().setFieldError("numSwims", "Select a number of swims to purchase.") />
 	</cfif>
 

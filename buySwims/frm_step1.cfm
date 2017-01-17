@@ -98,7 +98,7 @@
 				</td>
 				<td>
 					<select name="numSwims" size="1" id="numswims">
-						<cfloop from="10" to="100" index="i">
+						<cfloop from="1" to="100" index="i">
 							<option value="#i#" <cfif attributes.numSwims EQ i>selected="true"</cfif>>#i#</option>
 						</cfloop>
 					</select>
