@@ -321,40 +321,6 @@ genContent.squidMail = "
 		<cfreturn VAL(qNewID.newID) />
 	</cffunction>
 
-<!--- (11/30/2012) This is no longer used
-	<cffunction name="getUserName" access="private" displayname="getUserName" hint="Gets Unique Username for user" output="No" returntype="string">
-		<cfargument name="dsn" required="no" type="string" default="squid" />
-		<cfargument name="userTbl" required="yes" type="string" />
-		<cfargument name="firstName" required="yes" type="string" />
-		<cfargument name="lastName" required="yes" type="string" />
-
-		<cfset var username = LCASE(LEFT(firstName,1) & lastName) />
-		<cfset var usernameSuffix = 0 />
-		<cfset var usernameSuccess = false />
-
-		<!--- Make sure username's not taken --->
-		<cfloop condition="NOT usernameSuccess">
-			<cfquery name="qUserName" datasource="#arguments.dsn#">
-				SELECT
-					u.user_id
-				FROM
-					#userTbl# u
-				WHERE
-					lower(u.username) = <cfqueryparam value="#LCase(username)#" cfsqltype="CF_SQL_VARCHAR" />
-			</cfquery>
-
-			<cfif qUserName.RecordCount>
-				<cfset usernameSuffix = usernameSuffix + 1 />
-				<cfset username = LCASE(LEFT(firstName,1) & lastName & usernameSuffix) />
-			<cfelse>
-				<cfset usernameSuccess = true />
-			</cfif>
-		</cfloop>
-
-		<cfreturn username />
-	</cffunction>
---->
-
 	<cffunction name="getPassword" access="private" displayname="getPassword" hint="Gets Password and Salt" output="No" returntype="struct">
 		<cfset var stPassword = StructNew() />
 		<cfset stPassword.password = RandRange(10000000,99999999) />
@@ -988,6 +954,13 @@ genContent.squidMail = "
 				SET NOCOUNT OFF;
 
 				SELECT scope_identity() AS newUserID;
+			</cfquery>
+
+			<cfquery name="local.updateCreatedModifiedUser" datasource="#arguments.dsn#">
+				UPDATE users
+				SET created_user = user_id,
+					modified_user = user_id
+				WHERE user_id = <cfqueryparam value="#local.qInsert.newUserID#" cfsqltype="cf_sql_integer" />
 			</cfquery>
 		</cftransaction>
 

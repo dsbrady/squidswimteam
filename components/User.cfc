@@ -111,7 +111,7 @@ component accessors = "true" extends="Base" {
 						u.tempPassword,
 						u.mailingListYN,
 						u.created_date,
-						u.created_user
+						ISNULL(u.created_user,0) AS created_user
 					FROM
 						users u
 						INNER JOIN preferences ep ON ep.preference_id = u.email_preference
