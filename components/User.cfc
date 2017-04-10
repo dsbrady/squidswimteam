@@ -141,7 +141,7 @@ component accessors = "true" extends="Base" {
 			setEmailPreferenceID(local.userInfo.email_preference);
 			setEmergencyContact(local.userInfo.contact_emergency);
 			setEmergencyPhone(local.userInfo.phone_emergency);
-			setExpirationDate(local.userInfo.date_expiration);
+			setExpirationDate(isValid("date", local.userInfo.date_expiration) ? local.userInfo.date_expiration : "12/31/2999 23:59:59");
 			setFax(local.userInfo.fax);
 			setFirstName(local.userInfo.first_name);
 			setFirstPractice(isValid("date", local.userInfo.first_practice) ? local.userInfo.first_practice : "");
