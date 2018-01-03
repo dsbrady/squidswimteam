@@ -1,15 +1,15 @@
-<!--- 
+<!---
 <fusedoc fuse="dsp_content.cfm" language="ColdFusion" specification="3.0">
 	<responsibilities>
 		I display content page.
-	</responsibilities>	
+	</responsibilities>
 	<properties>
 		<history author="Scott Brady" date="14 October 2003" type="Create" role="Architect">
 	</properties>
 	<io>
 		<in>
 			<structure name="XFA">
-				
+
 			</structure>
 		</in>
 	</io>

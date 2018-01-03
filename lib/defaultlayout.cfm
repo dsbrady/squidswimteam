@@ -59,6 +59,14 @@ may not be used without express written permission from Colorado Whitewater Aqua
 	</head>
 <cfoutput>
 <body onload="#Request.onLoad#">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js##xfbml=1&version=v2.11&appId=197893030785353';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <div id="diver" style="position:absolute;left:0px;top:0px;height:171px;width:197px;z-index:1"><img src="images/diver.jpg" height="171" width="197" vspace="0" hspace="0" border="0" alt="Diver" /></div>
 <div id="logo" style="position:absolute;left:197px;top:0px;height:107px;width:603px;z-index:1"><img src="images/logo.jpg" height="107" width="603" vspace="0" hspace="0" border="0" alt="SQUID Swim Team" /></div>
 <div id="logoTile" style="position:absolute;left:800px;top:0px;height:107px;width:100%px;z-index:1;background:url('images/logo_tile.jpg');"></div>
@@ -88,7 +96,7 @@ may not be used without express written permission from Colorado Whitewater Aqua
 <div id="laneLines" style="position:absolute;left:255px;top:155px;height:56px;width:597px;z-index:1;background:url('images/laneline.gif');"></div>
 <div id="laneLinesTile" style="position:absolute;left:255px;top:211px;height:425px;width:597px;z-index:1;background:url('images/laneline_tile.gif');"></div>
 <div id="laneLineBottom" style="position:absolute;left:255px;top:636px;height:56px;width:597px;z-index:1;background:url('images/laneline_bottom.gif');"></div>
-<div id="mainContent" style="position:absolute;left:200px;top:120px;height:400px;width:597px;z-index:2;">
+<div id="mainContent" style="position:absolute;left:200px;top:120px;min-height:400px;width:597px;z-index:2;">
 	<!--- ---------------------- --->
 	<!--- Main content goes here --->
 		<cfoutput>#Fusebox.layout#</cfoutput>
@@ -105,6 +113,9 @@ may not be used without express written permission from Colorado Whitewater Aqua
 		and <a href="http://www.alansuel.com/" target="_blank">Alan Suel</a>
 	</p>
 </div>
+<cfif fusebox.circuit IS "home" AND structKeyExists(attributes, "page") AND attributes.page IS "Home">
+	<div class="fb-page" style="position:absolute;left:850px;top:120px;width:350px;height:600px;" data-href="https://www.facebook.com/squidswimteam/" data-tabs="timeline" data-small-header="false" data-width="350" data-height="600" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"><blockquote cite="https://www.facebook.com/squidswimteam/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/squidswimteam/">SQUID Swim Team</a></blockquote></div>
+</cfif>
 </body>
 </cfoutput>
 </html>
