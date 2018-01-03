@@ -23,32 +23,6 @@
 	</io>
 </fusedoc>
 --->
-<cfsilent>
-	<!--- Get Gallery Page ID --->
-	<cfinvoke  
-		component="#Request.lookup_cfc#" 
-		method="getContent" 
-		returnvariable="qryGalleryID"
-		dsn=#Request.DSN#
-		pageTbl=#Request.pageTbl#
-		page="Gallery"
-		parent_id=0
-	>
-
-	<!--- Get Gallery Pages --->
-	<cfinvoke  
-		component="#Request.lookup_cfc#" 
-		method="getContent" 
-		returnvariable="qryPages"
-		dsn=#Request.DSN#
-		pageTbl=#Request.pageTbl#
-		galleryTbl=#Request.galleryTbl#
-		page="Gallery"
-		parent_id=#qryGalleryID.page_id#
-	>
-	
-</cfsilent>
-
 <cfoutput>
 <table width="600" border="0" cellpadding="0" cellspacing="0" align="center">
  	<thead>
@@ -61,26 +35,23 @@
 		</tr>
 	</thead>
 	<tbody>
-	<cfif qryPages.RecordCount>
 		<tr>
 			<td>
-				Select a page to view:
-				<ul>
-				<cfloop query="qryPages">
-					<li>
-						<a href="#Request.self#/fuseaction/#XFA.details#/page_id/#qryPages.page_id#.cfm">#qryPages.title#</a><cfif LEN(TRIM(qryPages.content))> - #qryPages.content#</cfif>
-					</li>
-				</cfloop>
-				</ul>
+				<strong><a href="https://www.facebook.com/groups/squidswimteam/photos/" target="squidGallery">SQUID Facebook Photos</a></strong>
 			</td>
 		</tr>
-	<cfelse>
 		<tr>
 			<td>
-				Currently, there are no gallery pages.
+				&nbsp;
 			</td>
 		</tr>
-	</cfif>
+		<tr>
+			<td>
+				<!-- InstaWidget -->
+				<a href="https://instawidget.net/v/user/squidswimteam" id="link-3e13f2a2ba5f9564a89306d9311c600c525d61ef4c9f69a4000e5b2495ef8319">@squidswimteam</a>
+				<script src="https://instawidget.net/js/instawidget.js?u=3e13f2a2ba5f9564a89306d9311c600c525d61ef4c9f69a4000e5b2495ef8319&width=500px"></script>
+			</td>
+		</tr>
 	</tbody>
 </table>
 </cfoutput>
