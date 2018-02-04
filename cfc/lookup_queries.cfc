@@ -1428,14 +1428,14 @@
 					INNER JOIN #arguments.usersTbl# u
 					ON o.user_id = u.user_id
 					AND u.active_code = 1
+					<cfif NOT arguments.displayInactive>
+						AND o.date_end IS NULL
+					</cfif>
 				)
 				ON ot.officer_type_id = o.officer_type_id
 				AND o.active_code = 1
 			WHERE
 				ot.active_code = 1
-			<cfif NOT arguments.displayInactive>
-				AND date_end IS NULL
-			</cfif>
 			<cfif NOT arguments.displayCoaches>
 				AND UPPER(ot.officer_type) <> 'COACH'
 			</cfif>
