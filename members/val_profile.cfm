@@ -1,66 +1,3 @@
-<!---
-<fusedoc
-	fuse = "val_profile.cfm"
-	version = "1.0"
-	language="ColdFusion">
-	<responsibilities>
-		I validate and process the information.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="5 June 2003" type="Create">
-	</properties>
-	<io>
-		<in>
-			<string name="self" />
-			<structure name="XFA">
-				<string name="success" />
-				<string name="failure" />
-			</structure>
-
-			<number name="user_id" scope="attributes" />
-			<string name="username" scope="attributes" />
-			<string name="first_name" scope="attributes" />
-			<string name="middle_name" scope="attributes" />
-			<string name="last_name" scope="attributes" />
-			<string name="preferred_name" scope="attributes" />
-			<string name="address1" scope="attributes" />
-			<string name="address2" scope="attributes" />
-			<string name="city" scope="attributes" />
-			<string name="state_id" scope="attributes" />
-			<string name="zip" scope="attributes" />
-			<string name="country" scope="attributes" />
-		</in>
-		<out>
-			<number name="user_id" scope="formOrUrl" />
-			<string name="username" scope="formOrUrl" />
-			<string name="username_old" scope="formOrUrl" />
-			<string name="first_name" scope="formOrUrl" />
-			<string name="first_name_old" scope="formOrUrl" />
-			<string name="middle_name" scope="formOrUrl" />
-			<string name="middle_name_old" scope="formOrUrl" />
-			<string name="last_name" scope="formOrUrl" />
-			<string name="last_name_old" scope="formOrUrl" />
-			<string name="preferred_name" scope="formOrUrl" />
-			<string name="preferred_name_old" scope="formOrUrl" />
-			<string name="address1" scope="formOrUrl" />
-			<string name="address1_old" scope="formOrUrl" />
-			<string name="address2" scope="formOrUrl" />
-			<string name="address2_old" scope="formOrUrl" />
-			<string name="city" scope="formOrUrl" />
-			<string name="city_old" scope="formOrUrl" />
-			<string name="state_id" scope="formOrUrl" />
-			<string name="state_id_old" scope="formOrUrl" />
-			<string name="zip" scope="formOrUrl" />
-			<string name="zip_old" scope="formOrUrl" />
-			<string name="country" scope="formOrUrl" />
-			<string name="country_old" scope="formOrUrl" />
-
-			<boolean name="success" scope="variables" />
-			<string name="reason" scope="variables" />
-		</out>
-	</io>
-</fusedoc>
---->
 <cfparam name="attributes.user_id" default="#Request.squid.user_id#" type="numeric">
 <cfparam name="attributes.email" default="" type="string">
 <cfparam name="attributes.username_old" default="" type="string">
@@ -105,7 +42,8 @@
 <cfparam name="attributes.date_expiration" default="" type="string">
 <cfparam name="attributes.email_preference" default="1" type="numeric">
 <cfparam name="attributes.posting_preference" default="3" type="numeric">
-<cfparam name="attributes.calendar_preference" default="6" type="numeric">
+<cfparam name="#attributes.isUnsubscribed#" default="false" type="boolean" />
+<cfparam name="#attributes.isUnsubscribedPrevious#" default="false" type="boolean" />
 <cfparam name="attributes.mailingListYN" default="0" type="boolean" />
 
 <cfparam name="attributes.returnFA" default="" type="string">

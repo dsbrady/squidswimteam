@@ -1,63 +1,3 @@
-<!---
-<fusedoc
-	fuse = "dsp_profile.cfm"
-	version = "1.0"
-	language="ColdFusion">
-	<responsibilities>
-		I display the profile.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="5 June 2003" type="Create">
-	</properties>
-	<io>
-		<in>
-			<string name="self" />
-			<structure name="XFA">
-				<string name="next" />
-			</structure>
-
-			<number name="user_id" scope="attributes" />
-			<string name="username" scope="attributes" />
-			<string name="first_name" scope="attributes" />
-			<string name="middle_name" scope="attributes" />
-			<string name="last_name" scope="attributes" />
-			<string name="preferred_name" scope="attributes" />
-			<string name="address1" scope="attributes" />
-			<string name="address2" scope="attributes" />
-			<string name="city" scope="attributes" />
-			<string name="state_id" scope="attributes" />
-			<string name="zip" scope="attributes" />
-			<string name="country" scope="attributes" />
-		</in>
-		<out>
-			<number name="user_id" scope="formOrUrl" />
-			<string name="username" scope="formOrUrl" />
-			<string name="username_old" scope="formOrUrl" />
-			<string name="first_name" scope="formOrUrl" />
-			<string name="first_name_old" scope="formOrUrl" />
-			<string name="middle_name" scope="formOrUrl" />
-			<string name="middle_name_old" scope="formOrUrl" />
-			<string name="last_name" scope="formOrUrl" />
-			<string name="last_name_old" scope="formOrUrl" />
-			<string name="preferred_name" scope="formOrUrl" />
-			<string name="preferred_name_old" scope="formOrUrl" />
-			<string name="address1" scope="formOrUrl" />
-			<string name="address1_old" scope="formOrUrl" />
-			<string name="address2" scope="formOrUrl" />
-			<string name="address2_old" scope="formOrUrl" />
-			<string name="city" scope="formOrUrl" />
-			<string name="city_old" scope="formOrUrl" />
-			<string name="state_id" scope="formOrUrl" />
-			<string name="state_id_old" scope="formOrUrl" />
-			<string name="zip" scope="formOrUrl" />
-			<string name="zip_old" scope="formOrUrl" />
-			<string name="country" scope="formOrUrl" />
-			<string name="country_old" scope="formOrUrl" />
-		</out>
-	</io>
-
-</fusedoc>
---->
 <cfsilent>
 	<cfparam name="attributes.user_id" default="#Request.squid.user_id#" type="numeric">
 	<cfparam name="attributes.status" default="2" type="numeric">
@@ -92,12 +32,11 @@
 	<cfparam name="attributes.balance" default=0 type="numeric">
 	<cfparam name="attributes.profile_visible" default="1" type="boolean">
 	<cfparam name="attributes.date_expiration" default="" type="string">
-	<cfparam name="attributes.email_preference" default="1" type="numeric">
+	<cfparam name="attributes.emailPreferenceID" default="1" type="numeric">
 	<cfparam name="attributes.posting_preference" default="3" type="numeric">
-	<cfparam name="attributes.calendar_preference" default="6" type="numeric">
+	<cfparam name="attributes.isUnsubscribed" default="false" type="boolean">
 	<cfparam name="attributes.emailPref" default="Plain Text" type="string">
 	<cfparam name="attributes.postingPref" default="All Messages" type="string">
-	<cfparam name="attributes.calendarPref" default="All Events" type="string">
 
 	<cfparam name="attributes.returnFA" default="" type="string">
 	<cfparam name="attributes.statusType" default="" type="string">
@@ -107,147 +46,64 @@
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
-	<!--- Set up user's profile info --->
-	<cfset strProfile = StructNew()>
-	<cfset strProfile.user_id = attributes.user_id>
-
 	<cfif NOT attributes.addNew>
-		<cfinvoke
-			component="#Request.user_cfc#"
-			method="getUser"
-			returnvariable="strProfile"
-			user=#variables.strProfile#
-			dsn=#Request.DSN#
-			usersTbl=#Request.usersTbl#
-			developerTbl=#Request.developerTbl#
-			preferenceTbl=#Request.preferenceTbl#
-			officerTbl=#Request.officerTbl#
-			objectsTbl=#Request.objectsTbl#
-			officer_permissionTbl=#Request.officer_permissionTbl#
-			officer_typeTbl=#Request.officer_typeTbl#
-			testerTbl=#Request.testerTbl#
-			user_statusTbl=#Request.user_statusTbl#
-		>
+		<cfset user = new squid.User(application.dsn, attributes.user_id) />
 
-		<cfinvoke
-			component="#Request.lookup_cfc#"
-			method="getMembers"
-			returnvariable="qryBalance"
-			user_id=#attributes.user_id#
-			dsn=#Request.DSN#
-			usersTbl=#Request.usersTbl#
-			user_statusTbl=#Request.user_statusTbl#
-			transactionTbl=#Request.practice_transactionTbl#
-			transaction_typeTbl=#Request.transaction_typeTbl#
-			activityDays=#Request.activityDays#
-		>
-
-		<cfset attributes.balance = qryBalance.balance>
-		<cfset swimPassExpiration = qryBalance.swimPassExpiration />
+		<cfset attributes.balance = user.getSwimBalance()>
 
 		<cfif (attributes.success IS NOT "No")>
 			<cfscript>
-				attributes.status = strProfile.status;
-				attributes.statusType = strProfile.statusType;
-				attributes.first_name = strProfile.first_name;
-				attributes.middle_name = strProfile.middle_name;
-				attributes.last_name = strProfile.last_name;
-				attributes.preferred_name = strProfile.preferred_name;
-				attributes.address1 = strProfile.address1;
-				attributes.address2 = strProfile.address2;
-				attributes.city = strProfile.city;
-				attributes.state_id = strProfile.state_id;
-				attributes.zip = strProfile.zip;
-				attributes.country = strProfile.country;
-				attributes.email = strProfile.email;
-				attributes.birthday = DateFormat(strProfile.birthday,"m/d/yyyy");
-				attributes.phone_cell = strProfile.phone_cell;
-				attributes.phone_day = strProfile.phone_day;
-				attributes.phone_night = strProfile.phone_night;
-				attributes.fax = strProfile.fax;
-				attributes.phone_emergency = strProfile.phone_emergency;
-				attributes.contact_emergency = strProfile.contact_emergency;
-				attributes.first_practice = Dateformat(strProfile.first_practice,"m/d/yyyy");
-				attributes.intro_pass = strProfile.intro_pass;
-				attributes.usms_no = strProfile.usms_number;
-				attributes.usms_year = strProfile.usms_year;
-				attributes.medical_conditions = strProfile.medical_conditions;
-				attributes.comments = strProfile.comments;
-				attributes.picture = strProfile.picture;
-				attributes.picture_height = strProfile.picture_height;
-				attributes.picture_width = strProfile.picture_width;
-				attributes.profile_visible = strProfile.profile_visible;
-				attributes.date_expiration = DateFormat(strProfile.date_expiration,'mm/dd/yyyy');;
-				attributes.email_preference = strProfile.email_preference;
-				attributes.posting_preference = strProfile.posting_preference;
-				attributes.calendar_preference = strProfile.calendar_preference;
-				attributes.emailPref = strProfile.emailPref;
-				attributes.postingPref = strProfile.postingPref;
-				attributes.calendarPref = strProfile.calendarPref;
-				attributes.mailingListYN = strProfile.mailingListYN;
+				attributes.status = user.getUserStatusID();
+				attributes.statusType = user.getUserStatusID();
+				attributes.first_name = user.getFirstName();
+				attributes.middle_name = user.getMiddleName();
+				attributes.last_name = user.getLastName();
+				attributes.preferred_name = user.getPreferredName();
+				attributes.address1 = user.getAddress1();
+				attributes.address2 = user.getAddress2();
+				attributes.city = user.getCity();
+				attributes.state_id = user.getStateID();
+				attributes.zip = user.getZIP();
+				attributes.country = user.getCountry();
+				attributes.email = user.getEmail();
+				attributes.birthday = DateFormat(user.getBirthday(),"m/d/yyyy");
+				attributes.phone_cell = user.getCellPhone();
+				attributes.phone_day = user.getPhoneDay();
+				attributes.phone_night = user.getPhoneNight();
+				attributes.fax = user.getFax();
+				attributes.phone_emergency = user.getEmergencyPhone();
+				attributes.contact_emergency = user.getEmergencyContact();
+				attributes.first_practice = dateformat(user.getFirstPractice(),"m/d/yyyy");
+				attributes.intro_pass = user.getUsedIntroPass();
+				attributes.usms_no = user.getUSMSNumber();
+				attributes.usms_year = user.getUSMSYear();
+				attributes.medical_conditions = user.getMedicalConditions();
+				attributes.comments = user.getComments();
+				attributes.picture = user.getPicture();
+				attributes.picture_height = user.getPictureHeight();
+				attributes.picture_width = user.getPictureWidth();
+				attributes.profile_visible = user.getIsProfileVisible();
+				attributes.date_expiration = DateFormat(user.getExpirationDate(),'mm/dd/yyyy');;
+				attributes.emailPreferenceID = user.getEmailPreferenceID();
+				attributes.posting_preference = user.getPostingPreferenceID();
+				attributes.emailPref = user.getEmailPreference();
+				attributes.postingPref = user.getPostingPreference();
+				attributes.mailingListYN = user.getIsOnMailingList();
 			</cfscript>
 		</cfif>
 	<cfelse>
-			<cfscript>
-				attributes.status = 2;
-				attributes.statusType = "Member";
-				attributes.first_name = "";
-				attributes.middle_name = "";
-				attributes.last_name = "";
-				attributes.preferred_name = "";
-				attributes.address1 = "";
-				attributes.address2 = "";
-				attributes.city = "";
-				attributes.state_id = "CO";
-				attributes.zip = "";
-				attributes.country = "US";
-				attributes.email = "";
-				attributes.birthday = "";
-				attributes.phone_cell = "";
-				attributes.phone_day = "";
-				attributes.phone_night = "";
-				attributes.fax = "";
-				attributes.phone_emergency = "";
-				attributes.contact_emergency = "";
-				attributes.first_practice = "";
-				attributes.intro_pass = false;
-				attributes.usms_no = "";
-				attributes.usms_year = "";
-				attributes.medical_conditions = "";
-				attributes.comments = "";
-				attributes.picture = "";
-				attributes.picture_height = 0;
-				attributes.picture_width = 0;
-				attributes.date_expiration = "";
-				attributes.profile_visible = true;
-				attributes.email_preference = 1;
-				attributes.posting_preference = 3;
-				attributes.calendar_preference = 6;
-				attributes.emailPref = "Plain Text";
-				attributes.postingPref = "All Messages";
-				attributes.calendarPref = "All Events";
-				attributes.mailingListYN = 0;
-
-				strProfile.first_name = "";
-				strProfile.middle_name = "";
-				strProfile.last_name = "";
-				strProfile.preferred_name = "";
-				strProfile.address1 = "";
-				strProfile.address2 = "";
-				strProfile.city = "";
-				strProfile.state_id = "CO";
-				strProfile.zip = "";
-				strProfile.country = "US";
-				strProfile.email = "";
-				strProfile.birthday = "";
-				strProfile.officer = ArrayNew(1);
-				strProfile.profile_visible = true;
-			</cfscript>
+		<cfset user = new squid.User(application.dsn, 0) />
+		<cfset user.setEmailPreferenceID("Plain Text") />
+		<cfset user.setEmailPreferenceID(1) />
+		<cfset user.setPostingPreferenceID("All Messages") />
+		<cfset user.setPostingPreferenceID(3) />
+		<cfset user.setUserStatus("Member") />
+		<cfset user.setUserStatusID(2) />
 	</cfif>
 
-	<cfset attributes.date_expiration = Replace(attributes.date_expiration,"-","/","ALL")>
-	<cfset attributes.birthday = Replace(attributes.birthday,"-","/","ALL")>
-	<cfset attributes.first_practice = Replace(attributes.first_practice,"-","/","ALL")>
+	<cfset attributes.date_expiration = replace(attributes.date_expiration,"-","/","ALL")>
+	<cfset attributes.birthday = replace(attributes.birthday,"-","/","ALL")>
+	<cfset attributes.first_practice = replace(attributes.first_practice,"-","/","ALL")>
 
 	<!--- Get states --->
 	<cfif attributes.actionType IS "view">
@@ -257,7 +113,7 @@
 			returnvariable="qryStates"
 			dsn=#Request.DSN#
 			stateTbl=#Request.stateTbl#
-			state_id=#strProfile.state_id#
+			state_id=#user.getStateID()#
 		>
 	<cfelseif attributes.user_id EQ Request.squid.user_id OR Secure("Update Members")>
 		<cfinvoke
@@ -274,7 +130,7 @@
 			returnvariable="qryStates"
 			dsn=#Request.DSN#
 			stateTbl=#Request.stateTbl#
-			state_id=#strProfile.state_id#
+			state_id=#user.getStateID()#
 		>
 	</cfif>
 
@@ -316,40 +172,41 @@
 		preference_type="POSTING"
 	>
 
-	<!--- Get Calendar Preferences --->
-	<cfinvoke
-		component="#Request.lookup_cfc#"
-		method="getPreferences"
-		returnvariable="qryCalPreferences"
-		dsn=#Request.DSN#
-		preferenceTbl=#Request.preferenceTbl#
-		preference_type="CALENDAR"
-	>
-
 	<cfset variables.tabindex = 1>
 
 	<!--- Set up editable fields list --->
 	<cfscript>
 		editableFields = "";
-		viewableFields = "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,comments,picture,officer,email_preference,posting_preference,calendar_preference,mailingListYN,balance,";
+		viewableFields = "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,comments,picture,officer,emailPreferenceID,posting_preference,mailingListYN,balance,";
 
 		if (attributes.user_id EQ Request.squid.user_id AND (CompareNoCase(attributes.actionType,"view") NEQ 0))
 		{
-			editableFields = editableFields & "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,medical,comments,picture,profile_visible,email_preference,posting_preference,calendar_preference,mailingListYN,";
+			editableFields = editableFields & "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,medical,comments,picture,profile_visible,emailPreferenceID,posting_preference,mailingListYN,";
 			viewableFields = viewableFields & "medical,status,balance,profile_visible,date_expiration,";
 		}
 		if (Secure("Update Members") AND (CompareNoCase(attributes.actionType,"view") NEQ 0))
 		{
-			editableFields = editableFields & "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,medical,comments,picture,status,profile_visible,date_expiration,email_preference,posting_preference,calendar_preference,mailingListYN,";
+			editableFields = editableFields & "first_name,middle_name,last_name,preferred_name,address,email,birthday,phone,emergency,first_practice,intro_pass,usms,medical,comments,picture,status,profile_visible,date_expiration,emailPreferenceID,posting_preference,mailingListYN,";
 			viewableFields = viewableFields & "medical,status,balance,profile_visible,date_expiration,";
 		}
 	</cfscript>
 </cfsilent>
+
+<cfoutput>
+<script type="text/javascript">
+	$(document).ready(function(){
+		<cfif attributes.user_id NEQ request.squid.user_id>
+			$('input[name="isUnsubscribed"]').on('click', function() {
+					alert('Be sure you have #encodeForJavascript(attributes.preferred_name)#\'s permission when updating their unsubscribe status.');
+				});
+		</cfif>
+	});
+</script>
 <cfif attributes.success IS "no">
 	<h2>There were problems with your submission:</h2>
 	<ul class="errorText">
 		<cfloop list="#attributes.reason#" index="variables.theItem" delimiters="*">
-			<li><cfoutput>#variables.theItem#</cfoutput></li>
+			<li>#variables.theItem#</li>
 		</cfloop>
 	</ul>
 	<p>Please make corrections below and re-submit the information.</p>
@@ -359,7 +216,6 @@
 	</p>
 </cfif>
 
-<cfoutput>
 <form name="profileForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post" onsubmit="return validate(this);" enctype="multipart/form-data">
 	<input type="hidden" name="user_id" value="#attributes.user_id#" />
 	<input type="hidden" name="returnFA" value="#attributes.returnFA#" />
@@ -386,7 +242,7 @@
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-<cfif (strProfile.profile_visible) OR (attributes.user_id EQ Request.squid.user_id) OR (Secure("Update Members"))>
+<cfif (user.getIsProfileVisible()) OR (attributes.user_id EQ Request.squid.user_id) OR (Secure("Update Members"))>
 	<cfif ListLen(editableFields)>
 		<tr valign="top">
 			<td colspan="2">
@@ -749,32 +605,17 @@
 		</tr>
 	</cfif>
 	<cfif NOT attributes.addNew AND ListFindNoCase(viewableFields,"balance")>
-		<cfif isDate(qryBalance.swimPassExpiration)>
-			<tr valign="top">
-				<td>
-					<strong>Swim Pass Expires</strong>:
-				</td>
-				<td>
-					#dateFormat(qryBalance.swimPassExpiration,"m/d/yyyy")#
-				<cfif attributes.user_id EQ Request.squid.user_id>
-					<br />
-					<a href="#Request.self#?fuseaction=#XFA.buySwims#">Buy Swims/Pass</a>
-				</cfif>
-				</td>
-			</tr>
-		<cfelse>
-			<tr valign="top">
-				<td>
-					<strong>Swim Balance:</strong>
-				</td>
-				<td>
-					#VAL(attributes.balance)#
-				<cfif attributes.user_id EQ Request.squid.user_id>
-					<a href="#Request.self#?fuseaction=#XFA.buySwims#">Buy Swims/Pass</a>
-				</cfif>
-				</td>
-			</tr>
-		</cfif>
+		<tr valign="top">
+			<td>
+				<strong>Swim Balance:</strong>
+			</td>
+			<td>
+				#VAL(user.getSwimBalance())#
+			<cfif attributes.user_id EQ Request.squid.user_id>
+				<a href="#Request.self#?fuseaction=#XFA.buySwims#">Buy Swims</a>
+			</cfif>
+			</td>
+		</tr>
 	</cfif>
 	<cfif ListFindNoCase(viewableFields,"first_practice")>
 		<tr valign="top">
@@ -874,34 +715,48 @@
 				<strong>Offices:</strong>
 			</td>
 			<td>
-		<cfloop from="1" to="#ArrayLen(strProfile.officer)#" index="i">
-			<cfif strProfile.officer[i].officer_profile>
-				#strProfile.officer[i].officer_type#<br />
+		<cfloop from="1" to="#arrayLen(user.getOffices())#" index="i">
+			<cfif user.getOffices()[i].profile>
+				#user.getOffices()[i].officer_type#<br />
 			</cfif>
 		</cfloop>
 			</td>
 		</tr>
 	</cfif>
-	<cfif ListFindNoCase(viewableFields,"email_preference")>
+	<cfif ListFindNoCase(viewableFields,"emailPreferenceID")>
 		<tr valign="top">
 			<td>
 				<strong>E-mail Format:</strong>
 			</td>
 			<td>
-			<cfif ListFindNoCase(editableFields,"email_preference")>
-				<select name="email_preference" size="1" tabindex="#variables.tabindex#">
+			<cfif ListFindNoCase(editableFields,"emailPreferenceID")>
+				<select name="emailPreferenceID" size="1" tabindex="#variables.tabindex#">
 				<cfloop query="qryEmailPreferences">
-					<option value="#qryEmailPreferences.preference_id#" <cfif attributes.email_preference EQ qryEmailPreferences.preference_id>selected="selected"</cfif>>#qryEmailPreferences.preference#</option>
+					<option value="#qryEmailPreferences.preference_id#" <cfif attributes.emailPreferenceID EQ qryEmailPreferences.preference_id>selected="selected"</cfif>>#qryEmailPreferences.preference#</option>
 				</cfloop>
 				</select>
 				<cfset variables.tabindex = variables.tabindex + 1>
 			<cfelse>
-				<input type="hidden" name="email_preference" value="#attributes.email_preference#" />
+				<input type="hidden" name="emailPreferenceID" value="#attributes.emailPreferenceID#" />
 				#attributes.emailPref#
 			</cfif>
 			</td>
 		</tr>
 	</cfif>
+	<cfif listFindNoCase(editableFields,"emailPreferenceID")>
+		<tr valign="top">
+			<td>
+				<strong>Unsubscribed?</strong>
+			</td>
+			<td>
+				<input type="radio" name="isUnsubscribed" tabindex="#variables.tabIndex#" value="true" #user.getIsUnsubscribed() ? "checked": ""# /> Yes
+				<input type="radio" name="isUnsubscribed" tabindex="#variables.tabIndex#" value="false" #NOT user.getIsUnsubscribed() ? "checked": ""# /> No
+			</td>
+		</tr>
+	<cfelse>
+		<input type="hidden" name="isUnsubscribed" value="#user.getIsUnsubscribed()#" />
+	</cfif>
+		<input type="hidden" name="isUnsubscribedPrevious" value="#user.getIsUnsubscribed()#" />
 	<cfif ListFindNoCase(viewableFields,"posting_preference")>
 		<tr valign="top">
 			<td>
@@ -918,26 +773,6 @@
 			<cfelse>
 				<input type="hidden" name="posting_preference" value="#attributes.posting_preference#" />
 				#attributes.postingPref#
-			</cfif>
-			</td>
-		</tr>
-	</cfif>
-	<cfif ListFindNoCase(viewableFields,"calendar_preference")>
-		<tr valign="top">
-			<td>
-				<strong>Calendar Receipt Format:</strong>
-			</td>
-			<td>
-			<cfif ListFindNoCase(editableFields,"calendar_preference")>
-				<select name="calendar_preference" size="1" tabindex="#variables.tabindex#">
-				<cfloop query="qryCalPreferences">
-					<option value="#qryCalPreferences.preference_id#" <cfif attributes.calendar_preference EQ qryCalPreferences.preference_id>selected="selected"</cfif>>#qryCalPreferences.preference#</option>
-				</cfloop>
-				</select>
-				<cfset variables.tabindex = variables.tabindex + 1>
-			<cfelse>
-				<input type="hidden" name="calendar_preference" value="#attributes.calendar_preference#" />
-				#attributes.calendarPref#
 			</cfif>
 			</td>
 		</tr>
@@ -980,6 +815,6 @@
 </cfif>
 	</tbody>
 </table>
-	<input type="hidden" name="username_old" value="#strProfile.email#" />
+	<input type="hidden" name="username_old" value="#user.getEmail()#" />
 </form>
 </cfoutput>

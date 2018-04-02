@@ -19,7 +19,7 @@ function validate(theForm)
 			return false;
 		}
 */
-		if (username && (trim(email.value) == ''))
+		if (email && (trim(email.value) == ''))
 		{
 			alert('Please enter the e-mail address.');
 			email.focus();

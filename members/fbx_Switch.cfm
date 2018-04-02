@@ -409,6 +409,7 @@ PROFILE/MEMBERS
 	<!--- Displays Profile --->
 		<cfparam name="attributes.user_id" default="#Request.squid.user_id#" type="numeric">
 		<cfparam name="attributes.actionType" default="view" type="string">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<cfscript>
 			if (attributes.user_id EQ Request.squid.user_id)
 			{
