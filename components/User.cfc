@@ -23,6 +23,7 @@ component accessors = "true" extends="Base" {
 	property name = "isOnMailingList" type = "boolean" default = false;
 	property name = "isPasswordTemporary" type = "boolean" default = true;
 	property name = "isProfileVisible" type = "boolean" default = true;
+	property name = "isUnsubscribed" type = "boolean" default = false;
 	property name = "lastName" type = "string" default = "";
 	property name = "medicalConditions" type = "string" default = "";
 	property name = "middleName" type = "string" default = "";
@@ -111,14 +112,17 @@ component accessors = "true" extends="Base" {
 						u.tempPassword,
 						u.mailingListYN,
 						u.created_date,
-						ISNULL(u.created_user,0) AS created_user
+						ISNULL(u.created_user,0) AS created_user,
+						CASE WHEN us.unsubscribeID IS NULL THEN 0 ELSE 1 END AS isUnusbscribed
 					FROM
 						users u
 						INNER JOIN preferences ep ON ep.preference_id = u.email_preference
 						INNER JOIN preferences pp ON pp.preference_id = u.posting_preference
 						INNER JOIN preferences cp ON cp.preference_id = u.calendar_preference
 						INNER JOIN userStatuses st ON st.user_status_id = u.user_status_id
-						LEFT OUTER JOIN balances b ON u.user_id = b.member_id
+						LEFT JOIN balances b ON u.user_id = b.member_id
+						LEFT JOIN unsubscribes us ON (u.user_id = us.userID OR u.email = us.email)
+							AND us.resubscribeDate IS NULL
 					WHERE
 						u.user_id = :userID
 			");
@@ -148,6 +152,7 @@ component accessors = "true" extends="Base" {
 			setIsOnMailingList(local.userInfo.mailingListYN);
 			setIsPasswordTemporary(local.userInfo.tempPassword);
 			setIsProfileVisible(local.userInfo.profile_visible);
+			setIsUnsubscribed(local.userInfo.isUnusbscribed);
 			setLastName(local.userInfo.last_name);
 			setMedicalConditions(local.userInfo.medical_conditions);
 			setMiddleName(local.userInfo.middle_name);

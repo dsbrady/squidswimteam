@@ -139,6 +139,42 @@
 			<cfreturn var.success>
 		</cfif>
 
+		<!--- Update unsubscribe status --->
+		<cfif arguments.formfields.isUnsubscribed NEQ arguments.formfields.isUnsubscribedPrevious>
+			<cfif arguments.formfields.isUnsubscribed>
+				<!--- Unsubscribe --->
+				<cfquery name="unsubscribe" datasource="#arguments.dsn#">
+					INSERT INTO unsubscribes (
+						userID,
+						email,
+						unsubscribeDate,
+						resubscribeDate,
+						modifiedBy,
+						modifiedDate
+					)
+					VALUES (
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.formfields.user_id#" />,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.formfields.email#" />,
+						GETDATE(),
+						NULL,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.updating_user#" />,
+						GETDATE()
+					)
+				</cfquery>
+			<cfelse>
+				<!--- Resubscribe --->
+				<cfquery name="resubscribe" datasource="#arguments.dsn#">
+					UPDATE unsubscribes
+					SET resubscribeDate = GETDATE(),
+						modifiedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.updating_user#" />,
+						modifiedDate = GETDATE()
+					WHERE (userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.formfields.user_id#" />
+						OR email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.formfields.email#" />)
+						AND resubscribeDate IS NULL
+				</cfquery>
+			</cfif>
+		</cfif>
+
 		<!--- If changing email, see if already exists --->
 		<cfif CompareNoCase(arguments.formfields.email,arguments.formfields.username_old) NEQ 0>
 			<cftransaction>
@@ -259,7 +295,6 @@
 				medical_conditions = <cfqueryparam value="#arguments.formfields.medical_conditions#" cfsqltype="CF_SQL_VARCHAR">,
 				email_preference = <cfqueryparam value="#arguments.formfields.email_preference#" cfsqltype="CF_SQL_INTEGER">,
 				posting_preference = <cfqueryparam value="#arguments.formfields.posting_preference#" cfsqltype="CF_SQL_INTEGER">,
-				calendar_preference = <cfqueryparam value="#arguments.formfields.calendar_preference#" cfsqltype="CF_SQL_INTEGER">,
 				mailingListYN = <cfqueryparam value="#VAL(arguments.formfields.mailingListYN)#" cfsqltype="CF_SQL_BIT" />,
 				comments = <cfqueryparam value="#arguments.formfields.comments#" cfsqltype="CF_SQL_VARCHAR">,
 			<cfif StructKeyExists(var.success,"imageName")>
