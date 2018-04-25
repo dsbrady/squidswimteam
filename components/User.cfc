@@ -50,6 +50,7 @@ component accessors = "true" extends="Base" {
 
 	User function init(required string dsn, required numeric userID) {
 		super.init(arguments.dsn);
+		setOffices([]);
 		return load(arguments.userID);
 	}
 

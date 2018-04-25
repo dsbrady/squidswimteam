@@ -34,6 +34,7 @@
 	<cfparam name="attributes.date_expiration" default="" type="string">
 	<cfparam name="attributes.emailPreferenceID" default="1" type="numeric">
 	<cfparam name="attributes.posting_preference" default="3" type="numeric">
+	<cfparam name="attributes.mailingListYN" default="false" type="boolean">
 	<cfparam name="attributes.isUnsubscribed" default="false" type="boolean">
 	<cfparam name="attributes.emailPref" default="Plain Text" type="string">
 	<cfparam name="attributes.postingPref" default="All Messages" type="string">
@@ -93,9 +94,9 @@
 		</cfif>
 	<cfelse>
 		<cfset user = new squid.User(application.dsn, 0) />
-		<cfset user.setEmailPreferenceID("Plain Text") />
+		<cfset user.setEmailPreference("Plain Text") />
 		<cfset user.setEmailPreferenceID(1) />
-		<cfset user.setPostingPreferenceID("All Messages") />
+		<cfset user.setPostingPreference("All Messages") />
 		<cfset user.setPostingPreferenceID(3) />
 		<cfset user.setUserStatus("Member") />
 		<cfset user.setUserStatusID(2) />
