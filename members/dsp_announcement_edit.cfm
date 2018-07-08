@@ -16,7 +16,7 @@
 				<string name="next" />
 				<string name="announcements" />
 			</structure>
-			
+
 			<number name="announcement_id" scope="attributes" />
 			<string name="subject" scope="attributes" />
 			<string name="announcement" scope="attributes" />
@@ -44,15 +44,15 @@
 	<cfparam name="Request.squid.announcement.special" default="false" type="boolean">
 	<cfparam name="Request.squid.announcement.eventDate" default="" type="string" />
 	<cfparam name="Request.squid.announcement.isPublic" default="false" type="boolean" />
-	
+
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
 	<cfif attributes.announcement_id GT 0 AND attributes.success IS NOT "">
 		<!--- Get announcement information --->
-		<cfinvoke  
-			component="#Request.announce_cfc#" 
-			method="getAnnouncements" 
+		<cfinvoke
+			component="#Request.announce_cfc#"
+			method="getAnnouncements"
 			returnvariable="qryAnnouncements"
 			announcement_id=#attributes.announcement_id#
 			dsn=#Request.DSN#
@@ -77,7 +77,7 @@
 				Session.squid.announcement.special = qryAnnouncements.special;
 				Session.squid.announcement.eventDate = DateFormat(qryAnnouncements.eventDate,"m/d/yyyy");
 				Session.squid.announcement.isPublic = YesNoFormat(qryAnnouncements.isPublic);
-				
+
 				Request.squid = StructCopy(Session.squid);
 			}
 		</cfscript>
@@ -101,8 +101,6 @@
 </cfif>
 
 <cfoutput>
-<script type="text/javascript" src="#Request.announceHtmlEditPath#/browserdetect.js"></script>
-<script type="text/javascript" src="#Request.announceHtmlEditPath#/richtext.js"></script>
 <form id="announcementForm" name="announcementForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post" onsubmit="return validate(this);" enctype="multipart/form-data">
 	<input type="hidden" name="announcement_id" value="#attributes.announcement_id#" />
 	<input type="hidden" name="original_announcement_id" value="#attributes.announcement_id#" />

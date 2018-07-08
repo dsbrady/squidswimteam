@@ -103,8 +103,13 @@ Uncomment this if you wish to have code specific that only executes if the circu
 		Request.content_file_path = "c:\data\inetpub\wwwroot\squidswimteam\files";
 		Request.showError = true;
 		Request.isSecure = true;
-		request.htmlEditor = request.theServer & "/lib/ckeditor/ckeditor.js";
+		request.htmlEditor = "https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.min.js";
 		request.htmlEditorConfig = request.theServer & "/lib/ckeditor_config.js";
+<link href='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_editor.min.css' rel='stylesheet' type='text/css' />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_style.min.css' rel='stylesheet' type='text/css' />
+
+<!-- Include JS file. -->
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.min.js'></script>
 	}
 	else
 	{
@@ -136,7 +141,7 @@ Uncomment this if you wish to have code specific that only executes if the circu
 		Request.content_file_path = "d:\inetpub\squidswimteam\files";
 		Request.showError = false;
 		Request.isSecure = true;
-		request.htmlEditor = request.theServer & "/lib/ckeditor/ckeditor.js";
+		request.htmlEditor = "https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js";
 		request.htmlEditorConfig = "/lib/ckeditor_config.js";
 	}
 

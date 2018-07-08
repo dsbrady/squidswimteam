@@ -1,47 +1,18 @@
-<!---
-<fusedoc
-	fuse = "dsp_update_content.cfm"
-	version = "1.0"
-	language="ColdFusion">
-	<responsibilities>
-		I display the content edit form.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="10 October 2003" type="Create">
-	</properties>
-	<io>
-		<in>
-			<string name="self" />
-			<structure name="XFA">
-				<string name="next" />
-			</structure>
-			
-			<string name="page" scope="attributes" />
-			<string name="content" scope="attributes" />
-
-			<string name="success" scope="attributes" />
-			<string name="reason" scope="attributes" />
-		</in>
-		<out>
-			<string name="content" scope="formOrUrl" />
-			<number name="page_id" scope="formOrUrl" />
-		</out>
-	</io>
-</fusedoc>
---->
 <cfsilent>
 	<cfparam name="Request.squid.content.title" default="" type="string">
 	<cfparam name="Request.squid.content.content" default="" type="string">
 	<cfparam name="Request.squid.content.page_id" default=0 type="numeric">
 	<cfparam name="attributes.from_preview" default="false" type="boolean">
-	
+
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
+	<cfimport prefix="squid" taglib="/customTags" />
+
 	<!--- Get current info --->
-	<cfinvoke  
-		component="#Request.lookup_cfc#" 
-		method="getContent" 
+	<cfinvoke
+		component="#Request.lookup_cfc#"
+		method="getContent"
 		returnvariable="qryContent"
 		dsn=#Request.DSN#
 		pageTbl=#Request.pageTbl#
@@ -55,7 +26,7 @@
 			Session.squid.content.content = qryContent.content;
 			Session.squid.content.title = qryContent.title;
 			Session.squid.content.page_id = VAL(qryContent.page_id);
-			
+
 			Request.squid = StructCopy(Session.squid);
 		}
 	</cfscript>
@@ -78,8 +49,6 @@
 </cfif>
 
 <cfoutput>
-<script type="text/javascript" src="#Request.contentHtmlEditPath#/browserdetect.js"></script>
-<script type="text/javascript" src="#Request.contentHtmlEditPath#/richtext.js"></script>
 <form id="contentForm" name="contentForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post" onsubmit="return validate(this);">
 	<input type="hidden" name="page_id" value="#Request.squid.content.page_id#" />
 	<input type="hidden" name="page" value="#attributes.page#" />
@@ -118,16 +87,11 @@
 				<strong>Content:</strong>
 			</td>
 			<td>
+				<squid:wysiwyg fieldid="content2" fieldname="content2">#request.squid.content.content#</squid:wysiwyg>
+<!---
 				<textarea name="content">#request.squid.content.content#</textarea>
-<!--- 12/17/2012 - no longer needed with ckeditor
-				<script type="text/javascript">
-				Start('#JSStringFormat(Request.contentHtmlEditPath)#','#JSStringFormat(Request.squid.content.content)#','#JsStringFormat(Request.theServer)#','#JSStringFormat(XFA.file_select)#');
-				</script>
-				<iframe id="testFrame" style="position: absolute; visibility: hidden; width: 0px; height: 0px;"></iframe>
-				<cfset variables.tabindex = variables.tabindex + 1>
-				<input type="hidden" name="content" value="" />
---->
-				</td>
+ --->
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>

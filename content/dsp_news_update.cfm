@@ -17,7 +17,7 @@
 				<string name="news" />
 				<string name="preview" />
 			</structure>
-			
+
 			<string name="date_from" scope="attributes" />
 			<string name="date_to" scope="attributes" />
 
@@ -50,8 +50,8 @@
 	<cfparam name="attributes.date_from" default="#DateFormat(Now(),"M-D-YYYY")#" type="string">
 	<cfparam name="attributes.date_to" default="#DateFormat(DateAdd("M",1,Now()),"M-D-YYYY")#" type="string">
 
-	<cfset attributes.date_from = Replace(attributes.date_from,"-","/","ALL")>	
-	<cfset attributes.date_to = Replace(attributes.date_to,"-","/","ALL")>	
+	<cfset attributes.date_from = Replace(attributes.date_from,"-","/","ALL")>
+	<cfset attributes.date_to = Replace(attributes.date_to,"-","/","ALL")>
 
 	<cfparam name="Request.squid.news.date_start" default="#DateFormat(Now(),"M/D/YYYY")#" type="string">
 	<cfparam name="Request.squid.news.date_end" default="#DateFormat(DateAdd("M",1,Now()),"M/D/YYYY")#" type="string">
@@ -65,15 +65,15 @@
 
 	<cfif attributes.news_id GT 0 AND attributes.success IS NOT "">
 		<!--- Get current item --->
-		<cfinvoke  
-			component="#Request.lookup_cfc#" 
-			method="getNews" 
+		<cfinvoke
+			component="#Request.lookup_cfc#"
+			method="getNews"
 			returnvariable="qryNews"
 			dsn=#Request.DSN#
 			newsTbl=#Request.newsTbl#
 			news_id=#VAL(attributes.news_id)#
 		>
-	
+
 		<cfscript>
 			if (attributes.success IS NOT "No")
 			{
@@ -81,7 +81,7 @@
 				Session.squid.news.headline = qryNews.headline;
 				Session.squid.news.date_start = qryNews.date_start;
 				Session.squid.news.date_end = qryNews.date_end;
-	
+
 				Request.squid = StructCopy(Session.squid);
 			}
 		</cfscript>
@@ -105,8 +105,6 @@
 </cfif>
 
 <cfoutput>
-<script type="text/javascript" src="#Request.contentHtmlEditPath#/browserdetect.js"></script>
-<script type="text/javascript" src="#Request.contentHtmlEditPath#/richtext.js"></script>
 <form id="newsForm" name="newsForm" action="#variables.baseHREF##Request.self#/fuseaction/#XFA.next#.cfm" method="post" onsubmit="return validate(this);">
 	<input type="hidden" name="news_id" value="#VAL(attributes.news_id)#" />
 	<input type="hidden" name="date_from" value="#attributes.date_from#" />

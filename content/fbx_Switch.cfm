@@ -117,7 +117,6 @@ UPDATE CONTENT
 			Request.js_validate = "content/javascript/update_content.js";
 			Request.template = "dsp_update_content.cfm";
 			arrayAppend(request.jsOther,request.htmlEditor);
-			Request.onLoad = Request.onLoad & "CKEDITOR.replace('content',{customConfig:'#request.htmlEditorConfig#'});";
 
 			XFA.next = "content.act_update_content";
 			XFA.file_select = "content.dsp_file_select";
