@@ -25,9 +25,9 @@
 --->
 <cfsilent>
 	<!--- Get Gallery Page ID --->
-	<cfinvoke  
-		component="#Request.lookup_cfc#" 
-		method="getContent" 
+	<cfinvoke
+		component="#Request.lookup_cfc#"
+		method="getContent"
 		returnvariable="qryGalleryID"
 		dsn=#Request.DSN#
 		pageTbl=#Request.pageTbl#
@@ -36,9 +36,9 @@
 	>
 
 	<!--- Get Gallery Pages --->
-	<cfinvoke  
-		component="#Request.lookup_cfc#" 
-		method="getContent" 
+	<cfinvoke
+		component="#Request.lookup_cfc#"
+		method="getContent"
 		returnvariable="qryPages"
 		dsn=#Request.DSN#
 		pageTbl=#Request.pageTbl#
@@ -46,7 +46,7 @@
 		page="Gallery"
 		parent_id=#qryGalleryID.page_id#
 	>
-	
+
 </cfsilent>
 
 <cfoutput>
@@ -68,7 +68,7 @@
 				<ul>
 				<cfloop query="qryPages">
 					<li>
-						<a href="#Request.self#/fuseaction/#XFA.details#/page_id/#qryPages.page_id#.cfm">#qryPages.title#</a><cfif LEN(TRIM(qryPages.content))> - #qryPages.content#</cfif>
+						<a href="#Request.self#?fuseaction=#XFA.details#&page_id=#qryPages.page_id#">#qryPages.title#</a><cfif LEN(TRIM(qryPages.content))> - #qryPages.content#</cfif>
 					</li>
 				</cfloop>
 				</ul>

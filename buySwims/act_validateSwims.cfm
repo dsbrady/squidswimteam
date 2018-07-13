@@ -35,7 +35,7 @@
 	<cfif NOT isValid("integer", attributes.creditCardVerificationNumber)>
 		<cfset getResponse().setFieldError("creditCardNumber", "Enter a valid card verification number.") />
 	<cfelse>
-		<cfif (attributes.creditCardTypeID IS "AMEX" AND len(attributes.creditCardVerificationNumber) NEQ 4) OR len(attributes.creditCardVerificationNumber) NEQ 3>
+		<cfif (attributes.creditCardTypeID IS "AMEX" AND len(attributes.creditCardVerificationNumber) NEQ 4) OR (attributes.creditCardTypeID IS NOT "AMEX" AND len(attributes.creditCardVerificationNumber) NEQ 3)>
 			<cfset getResponse().setFieldError("creditCardNumber", "Enter a valid card verification number.") />
 		</cfif>
 	</cfif>

@@ -16,7 +16,7 @@
 				<string name="success" />
 				<string name="failure" />
 			</structure>
-			
+
 			<number name="return_email" scope="attributes" />
 			<number name="subject" scope="attributes" />
 			<number name="email_body" scope="attributes" />
@@ -40,9 +40,9 @@
 <cfparam name="variables.reason" default="" type="string">
 
 <!--- Get all testers --->
-<cfinvoke  
+<cfinvoke
 	component="#Request.lookup_cfc#"
-	method="getTesters" 
+	method="getTesters"
 	returnvariable="qryTesters"
 	dsn=#Request.DSN#
 	testerTbl=#Request.testerTbl#
@@ -51,7 +51,7 @@
 
 <!--- Send e-mail --->
 <cfloop query="qryTesters">
-<cfmail server="mail.squidswimteam.org" from="squid@squidswimteam.org" subject="#attributes.subject#" to="#qryTesters.email#" server="mail.squidswimteam.org">
+<cfmail server="mail.squidswimteam.org" from="squid@squidswimteam.org" subject="#attributes.subject#" to="#qryTesters.email#">
 	<cfmailparam name = "Reply-To" value = "#attributes.return_email#">
 #qryTesters.tester#,
 

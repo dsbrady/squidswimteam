@@ -22,10 +22,10 @@ component accessors = "true" extends="squid.Base" {
 	}
 
 	void function insertTransaction() {
-		throw(type="squid.transactions.BaseTransaction" message="Implment the insertTransaction() method!" detail="The insertTransaction() method must be overridden in an implementing class");
+		throw(type="squid.transactions.BaseTransaction", message="Implment the insertTransaction() method!", detail="The insertTransaction() method must be overridden in an implementing class");
 	}
 
 	void function save() {
-		throw(type="squid.transactions.BaseTransaction" message="Implment the save() method!" detail="The save() method must be overridden in an implementing class");
+		throw(type="squid.transactions.BaseTransaction", message="Implment the save() method!", detail="The save() method must be overridden in an implementing class");
 	}
 }
