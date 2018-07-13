@@ -1,29 +1,4 @@
 <!---
-<fusedoc fuse="FBX_Settings.cfm">
-	<responsibilities>
-		I set up the enviroment settings for this circuit. If this settings file is being inherited, then you can use CFSET to override a value set in a parent circuit or CFPARAM to accept a value set by a parent circuit
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="15 December 2002" role="Architect" />
-	</properties>
-	<io>
-		<in>
-			<structure name="fusebox">
-				<boolean name="isHomeCircuit" comments="Is the circuit currently executing the home circuit" />
-			</structure>
-		</in>
-		<out>
-			<string name="self" scope="variables" />
-			<string name="self" scope="request" />
-			<string name="fusebox.layoutDir" />
-			<string name="fusebox.layoutFile" />
-			<boolean name="fusebox.suppressErrors" />
-		</out>
-	</io>
-</fusedoc>
- --->
-
-<!---
 Uncomment this if you wish to have code specific that only executes if the circuit running is the home circuit.
 --->
 
@@ -77,16 +52,16 @@ Uncomment this if you wish to have code specific that only executes if the circu
 	if (application.environment == "development")
 	{
 	/* Development */
-		request.siteRoot = "/dev/";
+		request.siteRoot = "/";
 		Request.DSN = "squidSQL";
-		Request.theServer = "https://" & CGI.server_name & "/dev";
+		Request.theServer = "http://" & CGI.server_name;
 		Request.js_default = Request.theServer & "/javascript/default.js";
 		Request.ss_main = Request.theServer & "/styles/main.css";
 		variables.baseHREF = Request.theServer & "/";
 		Request.privacy_template = "lib/dsp_privacy.cfm";
 		Request.images_folder = "/images";
 		Request.member_picture_folder = "/members/photos";
-		Request.member_picture_path = "d:\inetpub\squidswimteam\members\photos";
+		Request.member_picture_path = "\Library\web_roots\squid\members\photos";
 		Request.from_email = "dsbrady@protonmail.com";
 		Request.admin_email = "dsbrady@protonmail.com";
 		Request.webmaster_email = "dsbrady@protonmail.com";
@@ -94,15 +69,15 @@ Uncomment this if you wish to have code specific that only executes if the circu
 		Request.cfcPath = "cfc";
 		Request.imageinfo_path = "/lib/imageinfo.cfm";
 		Request.announcement_folder = "/members/attachments";
-		Request.announcement_path = "c:\data\inetpub\wwwroot\squidswimteam\members\attachments";
+		Request.announcement_path = "\Library\web_roots\squid\members\attachments";
 		Request.issues_folder = "/members/attachments";
-		Request.issues_path = "c:\data\inetpub\wwwroot\squidswimteam\members\attachments";
+		Request.issues_path = "\Library\web_roots\squid\members\attachments";
 		Request.announceHtmlEditPath = Request.theServer & "/lib/announceHtmlEdit";
 		Request.contentHtmlEditPath = Request.theServer & "/lib/contentHtmlEdit";
 		Request.content_file_folder = "/files";
-		Request.content_file_path = "c:\data\inetpub\wwwroot\squidswimteam\files";
+		Request.content_file_path = "\Library\web_roots\squid\files";
 		Request.showError = true;
-		Request.isSecure = true;
+		Request.isSecure = false;
 		request.htmlEditor = request.theServer & "/lib/ckeditor/ckeditor.js";
 		request.htmlEditorConfig = request.theServer & "/lib/ckeditor_config.js";
 	}
@@ -124,7 +99,7 @@ Uncomment this if you wish to have code specific that only executes if the circu
 		Request.adminEmailPassword = "Squ1d*sw1m";
 		Request.webmaster_email = "squid@squidswimteam.org";
 		Request.customFunctions = "lib/customFunctions.cfm";
-		Request.cfcPath = "squidswimteam.cfc";
+		Request.cfcPath = "cfc";
 		Request.imageinfo_path = "/lib/imageinfo.cfm";
 		Request.announcement_folder = "/members/attachments";
 		Request.announcement_path = "d:\inetpub\squidswimteam\members\attachments";
@@ -206,12 +181,9 @@ OTHER SETTINGS
 	Request.errorPage = "error/dsp_error.cfm";
 	Request.errorPageHTML = "error/dsp_error.html";
 	Request.paypal_cfc = Request.cfcPath & ".paypal";
-	Request.meetRegistrationCFC = CreateObject("component","squidswimteam.goldrush2009.register.cfc.registration");
 	Request.survey_cfc = Request.cfcPath & ".survey";
 	Request.accounting_cfc = Request.cfcPath & ".accounting";
 	Request.announce_cfc = Request.cfcPath & ".announcements";
-	Request.calendar_cfc = CreateObject("component",Request.cfcPath & ".calendar");
-	Request.surveyCFC = CreateObject("component",Request.survey_cfc);
 	Request.lookupCFC = CreateObject("component",Request.lookup_cfc);
 	Request.jsonCFC = CreateObject("component","cfc.json");
 	Request.utilitiesCFC = CreateObject("component","cfc.utilities");

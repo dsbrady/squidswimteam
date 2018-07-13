@@ -181,16 +181,6 @@
 										</a>
 									</td>
 								</tr>
-								<tr align="left">
-									<td>
-										<a href="#Request.self#?fuseaction=#XFA.survey#">Take Surveys</a>
-									<cfif qSurveys.RecordCount>
-										<span style="color:red;">
-											<strong>(#qSurveys.RecordCount# Available)</strong>
-										</span>
-									</cfif>
-									</td>
-								</tr>
 							<cfif Secure("Update Financials") OR Secure("Update Practices")>
 								<tr align="left">
 									<td>
@@ -329,43 +319,6 @@
 					</tr>
 				</table>
 			</td>
-<!---
-		<!--- Events --->
-				<table width="285" cellpadding="0" cellspacing="0" border="0" bgcolor="##E1ECEE">
-					<tr>
-						<td colspan="3" width="285" height="36"><img src="images/dashboardTableEvents.gif" width="285" height="36" alt="Upcoming Events" hspace="0" vspace="0" /></td>
-					</tr>
-					<tr>
-						<td width="13" background="images/dashboardTableLeftBorder.gif"><img src="images/spacer.gif" width="13" height="12" alt="" /></td>
-						<td width="260">
-							<a href="#Request.self#?fuseaction=#XFA.calendar#">View Calendar</a>
-							<table>
-							<cfloop query="qEvents">
-								<tr valign="top">
-									<td align="left">
-									<cfif qEvents.startDate EQ qEvents.endDate>
-										#DateFormat(qEvents.startDate,"mmm. d")#
-									<cfelse>
-										#DateFormat(qEvents.startDate,"mmm. d")#
-										<cfif DateDiff("d",qEvents.startDate,qEvents.endDate) NEQ 0>
-											- #DateFormat(qEvents.endDate,"mmm. d")#
-										</cfif>
-									</cfif>
-									</td>
-									<td align="left">
-										#Replace(qEvents.eventString," (","<br />(")#
-									</td>
-								</tr>
-							</cfloop>
-							</table>
-						</td>
-						<td width="12" background="images/dashboardTableRightBorder.gif"><img src="images/spacer.gif" width="12" height="12" alt="" /></td>
-					</tr>
-					<tr>
-						<td colspan="3"height="12"><img src="images/dashboardTableFooter.gif" width="285" height="12" alt="" hspace="0" vspace="0" /></td>
-					</tr>
-				</table>
---->
 		</tr>
 	</CFIF>
 	</tbody>

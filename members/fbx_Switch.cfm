@@ -56,7 +56,6 @@ DASHBOARD
 			swimBalance = Request.qMember.balance;
 			swimPassExpiration = Request.qMember.swimPassExpiration;
 			qAnnouncements = cfcAnnounce.getAnnouncements(0,"Approved",Request.dsn,Request.usersTbl,Request.announcementTbl,Request.announcement_statusTbl,"CASE WHEN a.eventDate IS NOT NULL THEN a.eventDate ELSE a.date_submitted END DESC",5);
-			qSurveys = Request.surveyCFC.getUserSurveys(Request.dsn,Request.surveyTbl,Request.surveyUserTbl,Request.squid.user_id,0,1);
 
 			announceCFC = CreateObject("component",Request.announce_cfc);
 			qPendingAnnouncements = announceCFC.getAnnouncements(0,"Pending",Request.dsn,Request.usersTbl,Request.announcementTbl,Request.announcement_statusTbl,"",0);
@@ -64,7 +63,6 @@ DASHBOARD
 			startDate = CreateDateTime(Year(Now()),Month(Now()),Day(Now()),0,0,0);
 			endDate = DateAdd("D",7,startDate);
 			endDate = CreateDateTime(Year(endDate),Month(endDate),Day(endDate),23,59,59);
-			qEvents = Request.calendar_cfc.getDateRangeEvents(Request.dsn,Request.usersTbl,Request.calendarTbl,Request.event_typeTbl,startDate,endDate);
 
 			request.qTrainingResources = request.objTrainingResources.getRecentTrainingResourcesByUserIDAsQuery(request.dsn,request.squid.user_id,5);
 		</cfscript>
