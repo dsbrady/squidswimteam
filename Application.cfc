@@ -38,6 +38,7 @@
 		</cfif>
 	</cffunction>
 
+<!--- TODO: uncomment this
 	<cffunction name="onError">
         <cfargument name="exception" type="any" required="true" />
         <cfargument name="eventName" type="string" required="true" />
@@ -55,6 +56,7 @@
 			<cfset session.setMaxInactiveInterval(javaCast("long", 2)) />
 		</cfif>
 	</cffunction>
+ --->
 
 	<cffunction name="onRequestStart">
 		<!--- TODO: protect this --->
