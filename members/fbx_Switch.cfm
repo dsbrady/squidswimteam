@@ -538,9 +538,10 @@ ANNOUNCEMENTS
 			Request.page_title = Request.page_title & "<br />Announcements";
 			Request.template = "dsp_announcements.cfm";
 
+			XFA.add = "members.dsp_announcement_add";
 			XFA.detail = "members.dsp_announcement_detail";
-			XFA.pending = "members.dsp_announcements_pending";
 			XFA.edit = "members.dsp_announcement_edit";
+			XFA.pending = "members.dsp_announcements_pending";
 
 			announceCFC = CreateObject("component",Request.announce_cfc);
 			qPendingAnnouncements = announceCFC.getAnnouncements(0,"Pending",Request.dsn,Request.usersTbl,Request.announcementTbl,Request.announcement_statusTbl,"",0);
@@ -575,7 +576,7 @@ ANNOUNCEMENTS
 		<cfinclude template="#Request.template#">
 	</cfcase>
 
-	<cfcase value="dsp_announcement_edit">
+	<cfcase value="dsp_announcement_add,dsp_announcement_edit">
 		<cfparam name="attributes.announcement_id" default="0" type="numeric">
 	<!--- Displays Announcement Edit form--->
 		<cfscript>

@@ -16,7 +16,7 @@
 				<string name="next" />
 				<string name="announcements" />
 			</structure>
-			
+
 			<number name="announcement_id" scope="attributes" />
 			<string name="subject" scope="attributes" />
 			<string name="announcement" scope="attributes" />
@@ -44,15 +44,33 @@
 	<cfparam name="Request.squid.announcement.special" default="false" type="boolean">
 	<cfparam name="Request.squid.announcement.eventDate" default="" type="string" />
 	<cfparam name="Request.squid.announcement.isPublic" default="false" type="boolean" />
-	
+
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
-	<cfif attributes.announcement_id GT 0 AND attributes.success IS NOT "">
+	<cfif fusebox.fuseaction iS "dsp_announcement_add" AND attributes.success IS NOT "No">
+		<cfset session.squid.announcement = {
+			announcement_id: 0,
+			attachment: "",
+			content: {
+				html: "",
+				plain: ""
+			},
+			eventDate: "",
+			isPublic: false,
+			sending_user: Request.squid.user_id,
+			special: false,
+			status_id: 1,
+			subject: "",
+			submittedBy_name: request.squid.preferred_name & " " & request.squid.last_name
+		} />
+
+		<cfset request.squid.announcement = session.squid.announcement />
+	<cfelseif attributes.announcement_id GT 0 AND attributes.success IS NOT "">
 		<!--- Get announcement information --->
-		<cfinvoke  
-			component="#Request.announce_cfc#" 
-			method="getAnnouncements" 
+		<cfinvoke
+			component="#Request.announce_cfc#"
+			method="getAnnouncements"
 			returnvariable="qryAnnouncements"
 			announcement_id=#attributes.announcement_id#
 			dsn=#Request.DSN#
@@ -77,7 +95,7 @@
 				Session.squid.announcement.special = qryAnnouncements.special;
 				Session.squid.announcement.eventDate = DateFormat(qryAnnouncements.eventDate,"m/d/yyyy");
 				Session.squid.announcement.isPublic = YesNoFormat(qryAnnouncements.isPublic);
-				
+
 				Request.squid = StructCopy(Session.squid);
 			}
 		</cfscript>

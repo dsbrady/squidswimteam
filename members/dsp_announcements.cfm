@@ -27,21 +27,21 @@
 <cfsilent>
 	<cfparam name="attributes.announcement_id" default="0" type="numeric">
 	<cfparam name="attributes.orderBy" default="a.date_submitted DESC" type="string">
-	
+
 	<cfparam name="attributes.date_from" default="#Month(DateAdd("m",-1,Now()))#-1-#Year(DateAdd("m",-1,Now()))#" type="string">
 	<cfparam name="attributes.date_to" default="#DateFormat(Request.end_of_time,"M-D-YYYY")#" type="string">
 
-	<cfset attributes.date_from = Replace(attributes.date_from,"-","/","ALL")>	
-	<cfset attributes.date_to = Replace(attributes.date_to,"-","/","ALL")>	
+	<cfset attributes.date_from = Replace(attributes.date_from,"-","/","ALL")>
+	<cfset attributes.date_to = Replace(attributes.date_to,"-","/","ALL")>
 
 	<cfparam name="attributes.success" default="" type="string">
 	<cfparam name="attributes.reason" default="" type="string">
 
 	<!--- Get maximum news date if end date is end of time --->
 	<cfif attributes.date_to IS DateFormat(Request.end_of_time,"M/D/YYYY")>
-		<cfinvoke  
-			component="#Request.lookup_cfc#" 
-			method="getMinMaxValue" 
+		<cfinvoke
+			component="#Request.lookup_cfc#"
+			method="getMinMaxValue"
 			returnvariable="qSubmitMax"
 			dsn=#Request.DSN#
 			tblName=#Request.announcementTbl#
@@ -49,9 +49,9 @@
 			activeField="active_code"
 		>
 
-		<cfinvoke  
-			component="#Request.lookup_cfc#" 
-			method="getMinMaxValue" 
+		<cfinvoke
+			component="#Request.lookup_cfc#"
+			method="getMinMaxValue"
 			returnvariable="qEventMax"
 			dsn=#Request.DSN#
 			tblName=#Request.announcementTbl#
@@ -81,9 +81,9 @@
 	</cfif>
 
 	<!--- Get Announcements --->
-	<cfinvoke  
-		component="#Request.announce_cfc#" 
-		method="getAnnouncements" 
+	<cfinvoke
+		component="#Request.announce_cfc#"
+		method="getAnnouncements"
 		returnvariable="qryAnnouncements"
 		announcement_id=#attributes.announcement_id#
 		status=#attributes.status#
@@ -148,7 +148,7 @@
 		</tr>
 		<tr valign="top">
 			<td align="center">
-				<a href="#Request.self#?fuseaction=#XFA.edit#">Post Announcement</a>
+				<a href="#Request.self#?fuseaction=#XFA.add#">Post Announcement</a>
 				| <a href="#Request.self#?fuseaction=#XFA.pending#&status=Saved%20for%20Later">Your Saved Announcements</a>
 			<cfif Secure("Approve Messages")>
 				<br />

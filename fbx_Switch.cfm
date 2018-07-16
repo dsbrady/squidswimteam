@@ -43,7 +43,7 @@
 
 		<cfset Request.suppressLayout = true />
 
-		<cfset Request.membersCFC = createObject("component","squidswimteam.cfc.members") />
+		<cfset Request.membersCFC = createObject("component","cfc.members") />
 
 		<cfset Request.results = Request.membersCFC.unsubscribe(Request.dsn,attributes.uid,Request.encryptionKey,Request.encryptionAlgorithm,Request.encryptionEncoding) />
 		<cfset Request.template = "act_next.cfm" />
