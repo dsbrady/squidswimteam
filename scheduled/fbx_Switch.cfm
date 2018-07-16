@@ -45,7 +45,7 @@ SWIM BALANCES
 			Request.suppressLayout = true;
 
 			lookupCFC = CreateObject("component",Request.lookup_cfc);
-			membersCFC = CreateObject("component","squidswimteam.cfc.members");
+			membersCFC = CreateObject("component","cfc.members");
 			qBalances = lookupCFC.getNegativeBalances(Request.dsn,Request.usersTbl,Request.preferenceTbl,Request.practice_transactionTbl,Request.activityDays);
 			Request.template = "act_balanceReminder.cfm";
 		</cfscript>
@@ -81,7 +81,7 @@ SWIM PASS REMINDERS
 			request.reminderDays1 = 7;
 			request.reminderDays2 = 3;
 			lookupCFC = createObject("component",request.lookup_cfc);
-			membersCFC = createObject("component","squidswimteam.cfc.members");
+			membersCFC = createObject("component","cfc.members");
 			request.scheduledCFC = createObject("component",request.scheduled_cfc);
 			request.qExpiredPasses = lookupCFC.getExpiredSwimPasses(request.dsn);
 			request.qExpiringPasses = lookupCFC.getExpiringSwimPasses(request.dsn,request.reminderDays1,request.reminderDays2);

@@ -382,7 +382,7 @@ Announcement:
 		</cfquery>
 
 		<!--- Send e-mail --->
-		<cfset membersCFC = createObject("component","squidswimteam.cfc.members") />
+		<cfset membersCFC = createObject("component","cfc.members") />
 		<cfloop query="qryUsers">
 			<!--- Get unsubscribe content --->
 			<cfset unsubscribeContent = membersCFC.getUnsubscribeContent(arguments.dsn,qryUsers.user_id,arguments.unsubscribeURL,arguments.encryptionKey,arguments.encryptionAlgorithm,arguments.encryptionEncoding) />

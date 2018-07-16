@@ -275,7 +275,7 @@
 
 		<cfset var local = structNew() />
 
-		<cfset local.objMembers = createObject("component","squidswimteam.cfc.members") />
+		<cfset local.objMembers = createObject("component","cfc.members") />
 		<cfset local.qNotifications = getUserBalanceNotifications(arguments.dsn) />
 		<cfset local.qLastNotification = "" />
 		<cfset local.unsubscribeContent = "" />
