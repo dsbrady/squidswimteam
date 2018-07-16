@@ -82,7 +82,7 @@
 	<tbody>
 		<tr valign="top">
 			<td align="center">
-				<a href="#Request.self#?fuseaction&#XFA.menu#">Main Menu</a>
+				<a href="#Request.self#?fuseaction=#XFA.menu#">Main Menu</a>
 				> <a href="#Request.self#?fuseaction=#XFA.acct_menu#">Accounting Menu</a>
 				> Practices
 			</td>
