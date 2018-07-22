@@ -56,9 +56,14 @@
 	<cfif len(trim(attributes.email)) EQ 0 OR NOT isValid("email", attributes.email)>
 		<cfset request.stSuccess.isSuccessful = false />
 		<cfset arrayAppend(request.stSuccess.aErrors,"Please enter a valid e-mail address.") />
-	<cfelseif request.profileCFC.emailAddressExists(request.dsn,attributes.email)>
-		<cfset request.stSuccess.isSuccessful = false />
-		<cfset arrayAppend(request.stSuccess.aErrors,"The e-mail address you entered already exists. Please enter another valid e-mail address.") />
+	<cfelse>
+		<cfset existingUser = request.profileCFC.getExistingUser(request.dsn,attributes.email) />
+		<cfif existingUser.recordCount GT 0 AND existingUser.status IS "Member">
+			<cfset request.stSuccess.isSuccessful = false />
+			<cfset arrayAppend(request.stSuccess.aErrors,"The e-mail address you entered already exists. Please enter another valid e-mail address.") />
+		<cfelseif existingUser.recordCount GT 0>
+			<cfset attributes.user_id = existingUser.user_id />
+		</cfif>
 	</cfif>
 
 	<cfif len(trim(attributes.password)) EQ 0 OR NOT request.profileCFC.isValidPassword(attributes.password, request.validPasswordRegularExpression)>

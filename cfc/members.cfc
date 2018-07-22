@@ -895,72 +895,128 @@ genContent.squidMail = "
 			</cfcase>
 		</cfswitch>
 
-		<!--- Insert into database and get user_id --->
+		<!--- Upsert into database and get user_id --->
 		<cftransaction isolation="SERIALIZABLE">
 			<cfquery name="local.qInsert" datasource="#arguments.dsn#">
 				SET NOCOUNT ON;
-				INSERT INTO
-					users
-				(
-					password,
-					passwordSalt,
-					first_name,
-					middle_name,
-					last_name,
-					preferred_name,
-					phone_cell,
-					email,
-					address1,
-					address2,
-					city,
-					state_id,
-					zip,
-					country,
-					phone_day,
-					phone_night,
-					contact_emergency,
-					phone_emergency,
-					date_expiration,
-					mailingListYN,
-					tempPassword,
-					user_status_id
-				)
-				VALUES
-				(
-					<cfqueryparam value="#Hash(arguments.formfields.password & local.salt)#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#local.salt#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.firstName#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.middleName#" cfsqltype="CF_SQL_VARCHAR" null="#len(arguments.formfields.middleName) EQ 0#" />,
-					<cfqueryparam value="#arguments.formfields.lastName#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.preferredName#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#local.phone_cell#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_cell) EQ 0#" />,
-					<cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.address1#" cfsqltype="CF_SQL_VARCHAR"/ >,
-					<cfqueryparam value="#arguments.formfields.address2#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.city#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.stateID#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.zip#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.country#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#local.phone_day#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_day) EQ 0#" />,
-					<cfqueryparam value="#local.phone_night#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_night) EQ 0#" />,
-					<cfqueryparam value="#arguments.formfields.emergencyName#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#arguments.formfields.emergencyPhone#" cfsqltype="CF_SQL_VARCHAR" />,
-					<cfqueryparam value="#CreateODBCDateTime(local.expirationDate)#" cfsqltype="CF_SQL_TIMESTAMP">,
-					<cfqueryparam value="#arguments.formfields.mailingList#" cfsqltype="CF_SQL_BIT" />,
-					0,
-					<cfqueryparam value="#local.qStatus.user_status_id#" cfsqltype="CF_SQL_INTEGER" />
-				);
+					DECLARE @userID INT = <cfqueryparam value="#arguments.formfields.user_id#" cfsqltype="cf_sql_integer" />
+
+					IF EXISTS (
+						SELECT 1
+						FROM users
+						WHERE active_code = 1
+							AND email = <cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />
+							<cfif val(arguments.formfields.user_id) GT 0>
+								AND user_id = <cfqueryparam value="#arguments.formfields.user_id#" cfsqltype="cf_sql_integer" />
+							</cfif>
+					) BEGIN
+						UPDATE users
+						SET password = <cfqueryparam value="#Hash(arguments.formfields.password & local.salt)#" cfsqltype="CF_SQL_VARCHAR" />,
+							passwordSalt = <cfqueryparam value="#local.salt#" cfsqltype="CF_SQL_VARCHAR" />,
+							first_name = <cfqueryparam value="#arguments.formfields.firstName#" cfsqltype="CF_SQL_VARCHAR" />,
+							middle_name = <cfqueryparam value="#arguments.formfields.middleName#" cfsqltype="CF_SQL_VARCHAR" null="#len(arguments.formfields.middleName) EQ 0#" />,
+							last_name = <cfqueryparam value="#arguments.formfields.lastName#" cfsqltype="CF_SQL_VARCHAR" />,
+							preferred_name = <cfqueryparam value="#arguments.formfields.preferredName#" cfsqltype="CF_SQL_VARCHAR" />,
+							phone_cell = <cfqueryparam value="#local.phone_cell#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_cell) EQ 0#" />,
+							email = <cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />,
+							address1 = <cfqueryparam value="#arguments.formfields.address1#" cfsqltype="CF_SQL_VARCHAR"/ >,
+							address2 = <cfqueryparam value="#arguments.formfields.address2#" cfsqltype="CF_SQL_VARCHAR" />,
+							city = <cfqueryparam value="#arguments.formfields.city#" cfsqltype="CF_SQL_VARCHAR" />,
+							state_id = <cfqueryparam value="#arguments.formfields.stateID#" cfsqltype="CF_SQL_VARCHAR" />,
+							zip = <cfqueryparam value="#arguments.formfields.zip#" cfsqltype="CF_SQL_VARCHAR" />,
+							country = <cfqueryparam value="#arguments.formfields.country#" cfsqltype="CF_SQL_VARCHAR" />,
+							phone_day = <cfqueryparam value="#local.phone_day#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_day) EQ 0#" />,
+							phone_night = <cfqueryparam value="#local.phone_night#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_night) EQ 0#" />,
+							contact_emergency = <cfqueryparam value="#arguments.formfields.emergencyName#" cfsqltype="CF_SQL_VARCHAR" />,
+							phone_emergency = <cfqueryparam value="#arguments.formfields.emergencyPhone#" cfsqltype="CF_SQL_VARCHAR" />,
+							date_expiration = <cfqueryparam value="#CreateODBCDateTime(local.expirationDate)#" cfsqltype="CF_SQL_TIMESTAMP">,
+							mailingListYN = <cfqueryparam value="#arguments.formfields.mailingList#" cfsqltype="CF_SQL_BIT" />,
+							tempPassword = 0,
+							user_status_id = <cfqueryparam value="#local.qStatus.user_status_id#" cfsqltype="CF_SQL_INTEGER" />
+						WHERE active_code = 1
+							AND email = <cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />
+							<cfif val(arguments.formfields.user_id) GT 0>
+								AND user_id = <cfqueryparam value="#arguments.formfields.user_id#" cfsqltype="cf_sql_integer" />
+							</cfif>
+
+						SELECT @userID = user_id
+						FROM users
+						WHERE active_code = 1
+							AND email = <cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />
+							<cfif val(arguments.formfields.user_id) GT 0>
+								AND user_id = <cfqueryparam value="#arguments.formfields.user_id#" cfsqltype="cf_sql_integer" />
+							</cfif>
+
+						UPDATE users
+						SET modified_user = user_id,
+							modified_date = GETDATE()
+						WHERE user_id = @userID
+					END
+					ELSE BEGIN
+						INSERT INTO users
+						(
+							password,
+							passwordSalt,
+							first_name,
+							middle_name,
+							last_name,
+							preferred_name,
+							phone_cell,
+							email,
+							address1,
+							address2,
+							city,
+							state_id,
+							zip,
+							country,
+							phone_day,
+							phone_night,
+							contact_emergency,
+							phone_emergency,
+							date_expiration,
+							mailingListYN,
+							tempPassword,
+							user_status_id
+						)
+						VALUES
+						(
+							<cfqueryparam value="#Hash(arguments.formfields.password & local.salt)#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#local.salt#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.firstName#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.middleName#" cfsqltype="CF_SQL_VARCHAR" null="#len(arguments.formfields.middleName) EQ 0#" />,
+							<cfqueryparam value="#arguments.formfields.lastName#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.preferredName#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#local.phone_cell#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_cell) EQ 0#" />,
+							<cfqueryparam value="#arguments.formfields.email#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.address1#" cfsqltype="CF_SQL_VARCHAR"/ >,
+							<cfqueryparam value="#arguments.formfields.address2#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.city#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.stateID#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.zip#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.country#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#local.phone_day#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_day) EQ 0#" />,
+							<cfqueryparam value="#local.phone_night#" cfsqltype="CF_SQL_VARCHAR" null="#len(local.phone_night) EQ 0#" />,
+							<cfqueryparam value="#arguments.formfields.emergencyName#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#arguments.formfields.emergencyPhone#" cfsqltype="CF_SQL_VARCHAR" />,
+							<cfqueryparam value="#CreateODBCDateTime(local.expirationDate)#" cfsqltype="CF_SQL_TIMESTAMP">,
+							<cfqueryparam value="#arguments.formfields.mailingList#" cfsqltype="CF_SQL_BIT" />,
+							0,
+							<cfqueryparam value="#local.qStatus.user_status_id#" cfsqltype="CF_SQL_INTEGER" />
+						);
+
+						SELECT @userID = scope_identity();
+
+						UPDATE users
+						SET created_user = user_id,
+							created_date = GETDATE(),
+							modified_user = user_id,
+							modified_date = GETDATE()
+						WHERE user_id = @userID
+					END
 
 				SET NOCOUNT OFF;
 
-				SELECT scope_identity() AS newUserID;
-			</cfquery>
-
-			<cfquery name="local.updateCreatedModifiedUser" datasource="#arguments.dsn#">
-				UPDATE users
-				SET created_user = user_id,
-					modified_user = user_id
-				WHERE user_id = <cfqueryparam value="#local.qInsert.newUserID#" cfsqltype="cf_sql_integer" />
+				SELECT @userID AS newUserID
 			</cfquery>
 		</cftransaction>
 

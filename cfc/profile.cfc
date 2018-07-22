@@ -384,20 +384,22 @@
 		<cfreturn var.success>
 	</cffunction>
 
-	<cffunction name="emailAddressExists" access="public" output="false" returntype="numeric">
+	<cffunction name="getExistingUser" access="public" output="false" returntype="query">
 		<cfargument name="dsn" required="true" type="string" />
 		<cfargument name="email" required="yes" type="string" />
 
-		<cfquery name="qryUserName" datasource="#arguments.DSN#">
+		<cfquery name="local.user" datasource="#arguments.DSN#">
 			SELECT
-				u.user_id
+				u.user_id,
+				us.status
 			FROM
 				users u
+				INNER JOIN userStatuses us ON u.user_status_id = us.user_status_id
 			WHERE
 				UPPER(u.email) = <cfqueryparam value="#UCASE(arguments.email)#" cfsqltype="CF_SQL_VARCHAR" />
 				AND u.active_code = 1
 		</cfquery>
 
-		<cfreturn qryUserName.recordCount />
+		<cfreturn local.user />
 	</cffunction>
 </cfcomponent>

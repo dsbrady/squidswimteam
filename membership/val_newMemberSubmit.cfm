@@ -1,29 +1,3 @@
-<!---
-<fusedoc
-	fuse = "val_newMemberSubmit.cfm"
-	version = "1.0"
-	language="ColdFusion">
-	<responsibilities>
-		I process the membership and payment.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="9 January 2013" type="Create">
-	</properties>
-	<io>
-		<in>
-			<string name="self" />
-			<structure name="XFA">
-				<string name="success" />
-				<string name="failure" />
-			</structure>
-		</in>
-		<out>
-			<boolean name="success" scope="variables" />
-			<string name="reason" scope="variables" />
-		</out>
-	</io>
-</fusedoc>
---->
 	<cfparam name="attributes.email" default="" type="string" />
 	<cfparam name="attributes.firstName" default="" type="string" />
 	<cfparam name="attributes.middleName" default="" type="string" />
@@ -57,6 +31,7 @@
 	<cfparam name="attributes.billingZip" default="" type="string" />
 	<cfparam name="attributes.billingCountry" default="" type="string" />
 	<cfparam name="attributes.numSwims" default="0" type="numeric" />
+	<cfparam name="attributes.user_id" default="0" type="numeric" />
 
 	<!--- Enter user into memberApplicationTable --->
 	<cfset request.memberApplicationID = request.membersCFC.insertMemberApplication(request.dsn,attributes).memberApplicationID />
