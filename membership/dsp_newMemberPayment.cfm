@@ -36,6 +36,7 @@
 	<cfparam name="attributes.liabilitySignature" default="" type="string" />
 	<cfparam name="attributes.liabilitySignatureDate" default="" type="string" />
 	<cfparam name="attributes.numSwims" default="0" type="numeric" />
+	<cfparam name="attributes.user_id" default="0" type="numeric" />
 
 	<cfparam name="attributes.success" default="" type="string" />
 	<cfparam name="attributes.reason" default="" type="string" />
@@ -75,6 +76,7 @@
 	</p>
 </div>
 <form name="paymentForm" id="paymentForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post">
+	<input type="hidden" name="user_id" value="#attributes.user_id#" />
 	<fieldset>
 		<legend>Dues Info</legend>
 		<div class="duesContainer">

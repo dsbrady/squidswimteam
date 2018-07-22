@@ -209,39 +209,39 @@
 					AND n.date_end >= <cfqueryparam value="#ParseDateTime(arguments.date_from)#" cfsqltype="CF_SQL_TIMESTAMP">
 				)
 			</cfif>
-	<cfif arguments.getAnnouncements>
-		UNION
-			SELECT
-				a.announcement_id AS news_id,
-				a.subject AS headline,
-				CAST(a.announcement AS nvarchar(3000)) AS article,
-				a.date_approved AS date_start,
-				CASE WHEN
-					a.eventDate IS NOT NULL
-				THEN
-					a.eventDate
-				ELSE
-					'12/31/9999'
-				END AS date_end,
-				'Announcement' AS newsType
-			FROM
-				announcements a
-			WHERE
-				a.isPublic = 1
-				AND a.active_code = 1
-				AND a.date_approved IS NOT NULL
-			<cfif IsDate(arguments.date_from) AND IsDate(arguments.date_to)>
-				AND
-				(
-					a.date_approved <= <cfqueryparam value="#ParseDateTime(arguments.date_to)#" cfsqltype="CF_SQL_TIMESTAMP">
-					AND
-					(
-						a.eventDate >= <cfqueryparam value="#ParseDateTime(arguments.date_from)#" cfsqltype="CF_SQL_TIMESTAMP">
-						OR a.eventDate IS NULL
-					)
-				)
+			<cfif arguments.getAnnouncements>
+				UNION
+					SELECT
+						a.announcement_id AS news_id,
+						a.subject AS headline,
+						CAST(a.announcement AS nvarchar(3000)) AS article,
+						a.date_approved AS date_start,
+						CASE WHEN
+							a.eventDate IS NOT NULL
+						THEN
+							a.eventDate
+						ELSE
+							'12/31/9999'
+						END AS date_end,
+						'Announcement' AS newsType
+					FROM
+						announcements a
+					WHERE
+						a.isPublic = 1
+						AND a.active_code = 1
+						AND a.date_approved IS NOT NULL
+					<cfif IsDate(arguments.date_from) AND IsDate(arguments.date_to)>
+						AND
+						(
+							a.date_approved <= <cfqueryparam value="#ParseDateTime(arguments.date_to)#" cfsqltype="CF_SQL_TIMESTAMP">
+							AND
+							(
+								a.eventDate >= <cfqueryparam value="#ParseDateTime(arguments.date_from)#" cfsqltype="CF_SQL_TIMESTAMP">
+								OR a.eventDate IS NULL
+							)
+						)
+					</cfif>
 			</cfif>
-	</cfif>
 			ORDER BY
 				date_start DESC,
 				date_end DESC

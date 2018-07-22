@@ -1,5 +1,4 @@
 <cfcomponent output="false">
-
 	<!--- full path to the directory in which this Application.cfc resides --->
 	<cfset variables.applicationPath = getDirectoryFromPath(getCurrentTemplatePath()) />
 
