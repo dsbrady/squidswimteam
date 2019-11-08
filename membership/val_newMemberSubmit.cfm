@@ -33,6 +33,22 @@
 	<cfparam name="attributes.numSwims" default="0" type="numeric" />
 	<cfparam name="attributes.user_id" default="0" type="numeric" />
 
+
+	<!--- Verify the captcha response --->
+	<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post" throwonerror="false" result="HTTPResult">
+		<cfhttpparam type="formfield" name="secret" value="6Lc7RsEUAAAAAPymzREACTgbuN_JgkbJ3Kx18C-w" />
+		<cfhttpparam type="formfield" name="response" value="#attributes['g-recaptcha-response']#" />
+		<cfhttpparam type="formfield" name="remoteip" value="#cgi.remote_addr#" />
+	</cfhttp>
+
+	<cfset recaptchaResult = deserializeJSON(HTTPResult.fileContent) />
+	<cfif NOT recaptchaResult.success OR recaptchaResult.score LT 0.5>
+		<cfset success = "no" />
+		<cfset reason = "There was a problem processing your payment. Please <a href=""#request.self#?fuseaction=#xfa.tryAgain#"">fill out the application again</a> or contact the Treasurer." />
+
+		<cflocation addtoken="false" url="#Request.self#?fuseaction=#XFA.next#&success=#variables.success#&reason=#variables.reason#" />
+	</cfif>
+
 	<!--- Enter user into memberApplicationTable --->
 	<cfset request.memberApplicationID = request.membersCFC.insertMemberApplication(request.dsn,attributes).memberApplicationID />
 

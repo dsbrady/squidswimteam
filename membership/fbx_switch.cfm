@@ -1,22 +1,3 @@
-<!---
-<fusedoc fuse="FBX_Switch.cfm">
-	<responsibilities>
-		I am the cfswitch statement that handles the fuseaction, delegating work to various fuses.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="9 May 2004" type="Create">
-	</properties>
-	<io>
-		<in>
-			<structure name="fuxebox">
-				<string name="fuseaction" />
-				<string name="circuit" />
-			</structure>
-		</in>
-	</io>
-</fusedoc>
- --->
-
 <cfswitch expression = "#fusebox.fuseaction#">
 <!--- ----------------------------------------
 FORM
@@ -109,6 +90,7 @@ FORM
 		<cfset arrayAppend(request.ssOther,"/styles/membership/newMemberForm.css") />
 		<cfset arrayAppend(request.jsOther,"/javascript/external/creditcard.js") />
 		<cfset arrayAppend(request.jsOther,"/javascript/creditCardCCV2.js") />
+		<cfset arrayAppend(request.jsOther,"https://www.google.com/recaptcha/api.js?render=6Lc7RsEUAAAAAMW8pLHOJHtNt1foCwUS3HcEHxTf") />
 		<cfset arrayAppend(request.jsOther,"membership/javascript/newMemberPayment.js") />
 		<cfset Request.template = "dsp_newMemberPayment.cfm" />
 

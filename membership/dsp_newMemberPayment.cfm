@@ -1,16 +1,3 @@
-<!---
-<fusedoc
-	fuse = "dsp_newMemberPayment.cfm"
-	version = "1.0"
-	language="ColdFusion">
-	<responsibilities>
-		I display the new member payment form.
-	</responsibilities>
-	<properties>
-		<history author="Scott Brady" date="9 January 2013" type="Create">
-	</properties>
-</fusedoc>
---->
 <cfsilent>
 	<cfparam name="attributes.email" default="" type="string" />
 	<cfparam name="attributes.password" default="" type="string" />
@@ -77,6 +64,8 @@
 </div>
 <form name="paymentForm" id="paymentForm" action="#variables.baseHREF##Request.self#?fuseaction=#XFA.next#" method="post">
 	<input type="hidden" name="user_id" value="#attributes.user_id#" />
+	<input type="hidden" class="js-recaptcha-response" name="g-recaptcha-response" value="" />
+
 	<fieldset>
 		<legend>Dues Info</legend>
 		<div class="duesContainer">
@@ -513,7 +502,7 @@
 		</div>
 	</fieldset>
 	<div id="nextStepButtonContainer">
-		<button type="submit" id="submitBtn" name="submitBtn" value="Complete Transaction">Complete Transaction</button>
+		<button type="button" id="submitBtn" name="submitBtn" value="Complete Transaction">Complete Transaction</button>
 	</div>
 </form>
 <cfinclude template="#request.siteRoot#lib/additionalFees.cfm" />
