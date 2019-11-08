@@ -127,7 +127,7 @@ function validatePayment()
 	}
 
 	grecaptcha.ready(function() {
-		grecaptcha.execute('6Lc7RsEUAAAAAMW8pLHOJHtNt1foCwUS3HcEHxTf', {action: 'newMembership'}).then(function(token) {
+		grecaptcha.execute(recaptchaKey, {action: 'newMembership'}).then(function(token) {
 			$('.js-recaptcha-response').val(token);
 			$('#paymentForm').submit();
 		});

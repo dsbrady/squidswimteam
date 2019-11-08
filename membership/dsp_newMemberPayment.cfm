@@ -36,6 +36,13 @@
 	<cfset request.billingCountry = attributes.country />
 
 	<cfset totalAmountDue = 0 />
+
+	<cfquery name="recaptchaKey" datasource="squidsql">
+		SELECT keyValue
+		FROM appKey
+		WHERE appName = 'reCAPTCHA v3'
+			AND keyType = 'SITE'
+	</cfquery>
 </cfsilent>
 
 <cfif attributes.success IS "no">
@@ -49,6 +56,9 @@
 </cfif>
 
 <cfoutput>
+	<script type="text/javascript">
+		var recaptchaKey = '#recaptchaKey.keyValue#';
+	</script>
 <h2 class="pageTitle">
 	#Request.page_title#
 </h2>

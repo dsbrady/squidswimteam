@@ -35,8 +35,15 @@
 
 
 	<!--- Verify the captcha response --->
+	<cfquery name="recaptchaKey" datasource="squidsql">
+		SELECT keyValue
+		FROM appKey
+		WHERE appName = 'reCAPTCHA v3'
+			AND keyType = 'SECRET'
+	</cfquery>
+
 	<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post" throwonerror="false" result="HTTPResult">
-		<cfhttpparam type="formfield" name="secret" value="6Lc7RsEUAAAAAPymzREACTgbuN_JgkbJ3Kx18C-w" />
+		<cfhttpparam type="formfield" name="secret" value="#recaptchaKey.keyValue#" />
 		<cfhttpparam type="formfield" name="response" value="#attributes['g-recaptcha-response']#" />
 		<cfhttpparam type="formfield" name="remoteip" value="#cgi.remote_addr#" />
 	</cfhttp>
