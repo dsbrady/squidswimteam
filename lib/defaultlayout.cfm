@@ -64,7 +64,7 @@ may not be used without express written permission from Colorado Whitewater Aqua
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js##xfbml=1&version=v2.11&appId=197893030785353';
+  js.src = 'https://connect.facebook.net/en_US/sdk.js##xfbml=1&version=v5.0&appId=197893030785353';
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 <div id="diver" style="position:absolute;left:0px;top:0px;height:171px;width:197px;z-index:1"><img src="images/diver.jpg" height="171" width="197" vspace="0" hspace="0" border="0" alt="Diver" /></div>
