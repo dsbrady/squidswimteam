@@ -3,7 +3,7 @@ $(document).ready
 	function()
 	{
 		$("#useContactAddress").click(populateBillingAddress);
-		$("#paymentForm").submit(validatePayment);
+		$("#submitBtn").on('click', validatePayment);
 	}
 );
 
@@ -36,7 +36,7 @@ function validatePayment()
 	var firstErrorField = '';
 	var currentDate = new Date();
 
-	$("#submitBtn").attr('disabled',true);
+	$("#submitBtn").prop('disabled',true);
 	if (trim($("#creditCardTypeID").val()).length == 0)
 	{
 		isSuccessful = false;
@@ -126,5 +126,12 @@ function validatePayment()
 		return false;
 	}
 
-	return true;
+	grecaptcha.ready(function() {
+		grecaptcha.execute(recaptchaKey, {action: 'newMembership'}).then(function(token) {
+			$('.js-recaptcha-response').val(token);
+			$('#paymentForm').submit();
+		});
+	});
+
+	return false;
 }
